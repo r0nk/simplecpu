@@ -126,7 +126,7 @@ function tick(){
 		}
 		memory[0]+=3;//instruction pointer++
 		if(memory[0]>255)
-			memory[0]=0;
+			memory[0]=memory[0]-255;
 	}
 	for(k=0;k<6;k++){
 		etfs[k].value = memory[offset+k];
