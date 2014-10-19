@@ -1,0 +1,38 @@
+body{
+	text-align: center;
+	margin: 0 auto;
+	width: 700px;
+	background-color:#EEEEEE;
+}
+.wrap {
+	text-align: center;
+	margin: 0 auto;
+	width: 700px;
+	background-color:white;
+}
+.content {
+	margin-left: 50px;
+	text-align: left;
+}
+.center {
+	margin: 0 auto;
+	width: 200px;
+}
+ul{
+	text-align: left;
+	font-size:22px;
+	background-color:#DD0000;
+	color:white;
+	list-style-type:none;
+	margin:0 auto ;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 50px;
+}
+li{
+	display: inline;
+}
+a{
+	text-decoration: none;
+	color:#FFFFFF;
+}
