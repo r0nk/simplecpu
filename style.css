@@ -1,38 +1,71 @@
-body{
+/* Ideally this should be moved to the <head>, but since at this point
+   that's no easy feat due to all the different files, let's just keep
+	 it here. */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,300);
+
+body {
+	font: 16px "Open Sans", "Helvetica Neue", helvetica, sans-serif;
+	font-weight: normal;
+	line-height: 1.4;
+
 	text-align: center;
 	margin: 0 auto;
 	width: 700px;
-	background-color:#EEEEEE;
+	color: #171717;
+	background-color: white;
 }
+
 .wrap {
 	text-align: center;
-	margin: 0 auto;
 	width: 700px;
-	background-color:white;
 }
+
 .content {
-	margin-left: 50px;
+	padding-left: 50px;
 	text-align: left;
 }
+
 .center {
 	margin: 0 auto;
 	width: 200px;
 }
-ul{
+
+ul {
 	text-align: left;
-	font-size:22px;
-	background-color:#DD0000;
-	color:white;
+	font-size: 18px;
+	font-weight: 300;
 	list-style-type:none;
-	margin:0 auto ;
-	padding-top: 6px;
-	padding-bottom: 6px;
-	padding-left: 50px;
+	margin: 0 0 20px 0;
+	padding: 20px 0 20px 50px;
+	background-color: rgba(0, 0, 0, .03);
+
+	border-bottom-left-radius:  12px;
+	border-bottom-right-radius: 12px;
 }
-li{
+
+li {
 	display: inline;
 }
-a{
+
+	/* Header branding */
+	li b {
+		font-weight: bold;
+		color: #f9293c;
+
+		border-right: 1px solid #eaeaea;
+		padding-right: 20px;
+	}
+
+a {
 	text-decoration: none;
-	color:#FFFFFF;
+	color: #737373;
 }
+
+table {
+	margin: 10px 0 10px 40px;
+	border-radius: 6px;
+	padding: 5px;
+}
+	table b {
+		font-weight: 300;
+	}
