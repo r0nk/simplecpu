@@ -21,13 +21,28 @@ c.addEventListener('click',function(e){
 	}
 	update();
 },false);
-c.addEventListener('mousewheel',function(e){
-	if(e.wheelDelta>0){
-		if(offset>1)
-			offset--;
-	}else{
-		if(offset<250)
-			offset++;
+//firefox band-aid
+var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+
+c.addEventListener(mousewheelevt,function(e){
+	console.log(e.detail);
+	if(e.wheelDelta){
+		if(e.wheelDelta>0){
+			if(offset>1)
+				offset--;
+		}else{
+			if(offset<250)
+				offset++;
+		}
+	}
+	if(e.detail){
+		if(e.detail<0){
+			if(offset>1)
+				offset--;
+		}else{
+			if(offset<250)
+				offset++;
+		}
 	}
 	for(k=0;k<6;k++){
 		etfs[k].value = memory[offset+k];
