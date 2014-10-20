@@ -16,12 +16,11 @@ We can do math with those numbers.<br>
 <p>
 This next device is called an 'adder'. It adds together two bits.<br>
 </div>
-<canvas id="adder" width="450" height="480"></canvas><br>
+<canvas id="gates" width="450" height="480"></canvas><br>
 <div class="content">
 If we have multiple bits we want to add, we can combine these devices by<br>
 connecting one's carry in to another's carry out.<br>
 <br>
-<script src="adder.js"></script>
 <div class="center">
 <a href="moreGates.html">
 	<img src="Left.png" alt="<left" style="width:50px;height:80px;" align="middle">
@@ -34,5 +33,17 @@ connecting one's carry in to another's carry out.<br>
 <br>
 </div>
 </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55886101-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script src="gateLib.js"></script>
+<script src="adder.js"></script>
 </body>
 </html>

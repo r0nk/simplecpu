@@ -14,12 +14,11 @@ Want to see how computers store data?<br>
 <p>
 This next device is called a 'D-Latch'. It holds a binary bit.<br>
 <br>
-<canvas id="Dlatch" width="390" height="210"></canvas><br>
+<canvas id="gates" width="390" height="210"></canvas><br>
 <br>
 The top switch is the value to be stored, the bottom switch enables storage.<br>
 <br>
 Eight of these devices can be used to store a byte in memory.<br>
-<script src="Dlatch.js"></script>
 <div class="center">
 <a href="NAND.html">
 	<img src="Left.png" alt="<left" style="width:50px;height:80px;" align="middle">
@@ -32,5 +31,17 @@ Eight of these devices can be used to store a byte in memory.<br>
 <br>
 </div>
 </div>
+<script src="gateLib.js"></script>
+<script src="memory.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55886101-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </body>
 </html>
