@@ -19,6 +19,9 @@ c.addEventListener('click',function(e){
 	if((x>340&&x<370)&&(y>90&&y<150)){
 		cpu.lever.value = !cpu.lever.value;
 	}
+	if((x>cpu.rset.x&&x<(cpu.rset.x+cpu.rset.w))&&(y>cpu.rset.y&&y<(cpu.rset.y+cpu.rset.h))&&(!cpu.lever.value)){
+		cpu.rset.doReset();
+	}
 	update();
 },false);
 //firefox band-aid
@@ -70,6 +73,7 @@ function Cpu(x,y){
 	this.etf = new Etf(x+50,y+90,memory[0]);
 	this.etf.type = 1;
 	this.lever = new Lever(x+10,y+60,false);
+	this.rset = new ResetButton(x+10,y+130)
 }
 function Lever(x,y,value){ 
 	this.x = x;	
@@ -87,7 +91,18 @@ function Etf(x,y,value){
 	this.type = 0;
 	this.value = value;
 }
+function ResetButton(x,y){
+	this.x = x;
+	this.y = y;
+	this.h=30;
+	this.w=30;
+	
+	this.doReset = resetIP;
+}
 //start of action functions
+function resetIP(){
+	memory[0]=1;
+}
 function modifyMemory(x,y){
 	row = Math.floor(y/30);
 	value = 128 >> Math.floor((x/ctx.measureText("0").width));
@@ -161,7 +176,7 @@ function update(){
 	cpu.etf.value = memory[0];
 	drawFrame();
 }
-//start of drawing fucntions
+//start of drawing functions
 function drawEtf(etf){
 	ctx.font = "24px Arial";
 	wid = ctx.measureText("00000000").width + 8;
@@ -219,6 +234,7 @@ function drawCpu(c){
 	ctx.fillText("CPU",c.x,c.y-3);	
 	drawLever(c.lever);
 	drawEtf(c.etf);
+	drawResetButton(cpu.rset);
 }
 function drawMemory(){
 	ctx.fillStyle = "#DDDDDD";
@@ -247,6 +263,15 @@ function drawFrame(){
 	ctx.fillText("Bus",243,118);	
 	ctx.fillStyle = "#DDDDDD";
 	ctx.fillRect(240,120,90,10);
+}
+function drawResetButton(r){
+	ctx.beginPath();
+	ctx.font = "16px Arial";
+	ctx.fillStyle = "#FFFFAA";
+	ctx.fillRect(r.x,r.y,30,30);
+	ctx.fillStyle = "#000000";
+	//ctx.fillText("R",r.x,r.y,30);
+		
 }
 for(i=0;i<256;i++)
 	memory[i] = 0;
