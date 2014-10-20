@@ -1,4 +1,4 @@
-simplecpu
+<a href="http://example.com">simpleCPU.com</a>
 =========
 
 A website to explain how computers actually work.
