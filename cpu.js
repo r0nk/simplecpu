@@ -95,7 +95,7 @@ function ResetButton(x,y){
 	this.x = x;
 	this.y = y;
 	this.h=30;
-	this.w=30;
+	this.w=90;
 	
 	this.doReset = resetIP;
 }
@@ -223,6 +223,7 @@ function drawLever(l){
 }
 function drawCpu(c){
 	ctx.fillStyle = "#DDDDDD";
+	
 	ctx.fillRect(c.x,c.y,190,190);
 	ctx.strokeStyle = "#999999";
 	ctx.strokeRect(c.x,c.y,190,190);
@@ -232,9 +233,9 @@ function drawCpu(c){
 	ctx.font = "16px Arial";
 	ctx.fillStyle = "#999999";
 	ctx.fillText("CPU",c.x,c.y-3);	
+	drawResetButton(cpu.rset);
 	drawLever(c.lever);
 	drawEtf(c.etf);
-	drawResetButton(cpu.rset);
 }
 function drawMemory(){
 	ctx.fillStyle = "#DDDDDD";
@@ -256,22 +257,27 @@ function drawFrame(){
 	ctx.setTransform(1,0,0,1,0,0);	
 	ctx.clearRect(0,0,1000,1000);
 	//draws everything onto the canvas 
-	drawCpu(cpu);
-	drawMemory();
 	ctx.fillStyle = "#999999";
 	ctx.font = "16px Arial";
 	ctx.fillText("Bus",243,118);	
 	ctx.fillStyle = "#DDDDDD";
 	ctx.fillRect(240,120,90,10);
+	drawCpu(cpu);
+	drawMemory();
 }
 function drawResetButton(r){
-	ctx.beginPath();
-	ctx.font = "16px Arial";
-	ctx.fillStyle = "#FFFFAA";
-	ctx.fillRect(r.x,r.y,30,30);
+	//ctx.beginPath();
+	//ctx.setTransform(1,0,0,1,r.x,r.y);
+	
+	ctx.fillStyle = "#909090";
+	ctx.fillRect(r.x,r.y,90,30);	
+	ctx.strokeStyle = "#999999";
+	ctx.strokeRect(r.x,r.y,90,30);
+	
+	ctx.font = "16px bold Arial";
 	ctx.fillStyle = "#000000";
-	//ctx.fillText("R",r.x,r.y,30);
-		
+	
+	ctx.fillText("Reset",r.x+45-Math.round(ctx.measureText("Reset").width/2),r.y+20);
 }
 for(i=0;i<256;i++)
 	memory[i] = 0;
