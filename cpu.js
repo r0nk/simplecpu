@@ -16,8 +16,13 @@ c.addEventListener('click',function(e){
 		if(!(cpu.lever.value))
 			modifyMemory(x-105,y-62);
 	}
+	//cpu on/off switch
 	if((x>340&&x<370)&&(y>90&&y<150)){
 		cpu.lever.value = !cpu.lever.value;
+	}
+	//reset button
+	if((x>435&&x<(435+ctx.measureText("reset  ").width))&&(y>150&&y<175)){
+		memory[0] = 1;
 	}
 	update();
 },false);
@@ -247,6 +252,11 @@ function drawFrame(){
 	ctx.fillText("Bus",243,118);	
 	ctx.fillStyle = "#DDDDDD";
 	ctx.fillRect(240,120,90,10);
+	//reset button
+	ctx.fillStyle = "#AAAAFF";
+	ctx.fillRect(435,155,ctx.measureText("Reset   ").width,20);
+	ctx.fillStyle = "#000000";
+	ctx.fillText("Reset",440,170);	
 }
 for(i=0;i<256;i++)
 	memory[i] = 0;
