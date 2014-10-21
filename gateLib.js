@@ -267,6 +267,20 @@ function drawWire(w){
 	//this is usefull in the case of joins in the middle of a wire.
 	if(w.value){
 		ctx.strokeStyle = "#00AA00";
+		ctx.lineWidth = 4;
+		ctx.beginPath();
+		ctx.setTransform(1,0,0,1,0,0);
+		ctx.moveTo(w.connections[0].x,w.connections[0].y);
+		ctx.lineTo(w.connections[1].x,w.connections[1].y);
+		ctx.stroke();
+		ctx.strokeStyle = "#FFFFFF";
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		ctx.setTransform(1,0,0,1,0,0);
+		ctx.moveTo(w.connections[0].x,w.connections[0].y);
+		ctx.lineTo(w.connections[1].x,w.connections[1].y);
+		ctx.stroke();
+		ctx.lineWidth = 1;
 	}else{
 		ctx.strokeStyle = "#FF0000";
 	}
@@ -281,7 +295,9 @@ function drawJoin(j){
 	ctx.beginPath();
 	ctx.setTransform(1,0,0,1,j.x-2,j.y-2);	
 	if(wires[j.wire1].value){
-		ctx.fillStyle = "#00FF00";
+		ctx.fillStyle = "#00AA00";
+		ctx.fillRect(-1,-1,6,6);
+		ctx.fillStyle = "#FFFFFF";
 	}else{
 		ctx.fillStyle = "#FF0000";
 	}

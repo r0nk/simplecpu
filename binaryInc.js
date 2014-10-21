@@ -40,7 +40,7 @@ function numDraw(n){
 }
 function chardraw(n,a,x,y){
 	if((n-a)>=0){
-		ctx.fillStyle = "#55EE55";
+		ctx.fillStyle = "#44DD44";
 		ctx.fillText("1",x,y);	
 		return true;
 	}else{	
