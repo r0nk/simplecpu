@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<html>
+<body>
+<div class="wrap">
+<ul>
+ <li><a href="Binary.html"><b>SimpleCPU.com</b></a>&nbsp;&nbsp;</li>
+ <li><a href="about.html">about</a></li>
+</ul><br>
+<div class="content">
+Here is a (relatively) simple CPU for you to play with;<br>
+</div>
+<canvas id="cpu" width="550" height="270"></canvas><br>
+<script src="cpu.js"></script>
+<div class="content">
+To modify memory, simply click on the bits while the cpu is off. You can<br>
+scroll through memory as well. To allow the cpu to start executing <br>
+instructions, turn the switch on.<br>
+<br>
+This cpu has three different instructions:<br>
+<table>
+ <tr>
+  <td><b>Instruction</b></td>
+  <td></td>
+  <td><b>Code</b></td>
+ <tr>
+  <td><i>add the value at the address held at (Instruction Pointer + 1)<br>
+ to the value at the address held at (Instruction Pointer + 2)</i></td>
+  <td>&nbsp;&nbsp;</td>
+  <td>00000001</td>
+ </tr>
+ <tr>
+  <td><i>subtract the value at the address held at (Instruction Pointer + 2)<br>
+ from the value at the address held at (Instruction Pointer + 1)</i></td>
+  <td>&nbsp;&nbsp;</td>
+  <td>00000010</td>
+ </tr>
+ <tr>
+  <td><i>move the value at the address held at (Instruction Pointer + 1)<br>
+ to the value at the address held at (Instruction Pointer + 2)</i></td>
+  <td>&nbsp;&nbsp;</td>
+  <td>00000011</td>
+ </tr>
+</table>
+<br>
+All of the instructions have a size of 3 bytes (operands included).This <br>
+means that we increment the instruction pointer by 3 after each instruction <br>
+is executed.<br>
+<br>
+The instruction pointer can be accessed by addressing memory location 00000000.
+<br>
+<br>
+<div class="center">
+<a href="InstructionPointer.html">
+	<img src="Left.png" alt="<left" style="width:50px;height:80px;" align="middle">
+</a>
+8/8
+</div>
+<br>
+</div>
+</div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55886101-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

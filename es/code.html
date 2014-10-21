@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<html>
+<body>
+<div class="wrap">
+<ul>
+ <li><a href="Binary.html"><b>SimpleCPU.com</b></a>&nbsp;&nbsp;</li>
+ <li><a href="about.html">about</a></li>
+</ul><br>
+<div class="content">
+<head>
+<style>
+table{
+border:1px solid black;
+}
+</style>
+</head>
+
+Cool, now we have a basic calculator. How can we turn this up to eleven<br> 
+and make a computer?<br>
+<br>
+Code.<br>
+<br>
+Now that you know what data is, code is easy to explain. It's just data.<br>
+The reason why it's different than other data, however, is because the CPU<br>
+interprets it as <i>instructions.</i><br>
+<br>
+Let's say we wanted the computer to do math, we could use a system like;<br>
+<br>
+<table>
+ <tr>
+  <td><b>instruction</b></td>
+  <td></td>
+  <td><b>code</b></td>
+ <tr>
+  <td><i>"add a number to another number"</i></td>
+  <td>&nbsp;&nbsp;</td>
+  <td>00000001</td>
+ </tr>
+ <tr>
+  <td><i>"subtract a number from another number"</i></td>
+  <td>&nbsp;&nbsp;</td>
+  <td>00000010</td>
+ </tr>
+</table>
+<br>
+With this, we can set what logic gates are being used based on data.<br>
+<br>
+Now, real quick, memory is organized in a computer by something called<br>
+memory addresses, which basically allow the CPU to ask for memory at a<br>
+certain location. Generally speaking the addresses are sized by "bytes"<br>
+which is just another word for "eight bits". So if we wanted to access<br>
+memory location five or whatever we could store that as '00000101'.<br>
+<br>
+Lets go back and add some more to our table:<br>
+<br>
+<table>
+ <tr>
+  <td><i>"move this data into some location"</i></td>
+  <td>&nbsp;&nbsp;</td>
+  <td>00000011</td>
+ <tr>
+</table>
+
+<br>
+Cool, now we can say something like:<br>
+<br>
+&nbsp;&nbsp;"add the number at location #5 in memory to the other number at <br>
+&nbsp;&nbsp;location #7 in memory."<br>
+<br>
+By breaking it down into:<br>
+<br>
+&nbsp;&nbsp;(add) (memory address #5) (memory address #7)<br>
+<br>
+Which is really just:<br>
+<br>
+&nbsp;&nbsp;00000001 00000101 00000111<br>
+<br>
+Pretty sweet right?<br>
+<br>
+<div class="center">
+<a href="adder.html">
+	<img src="Left.png" alt="<left" style="width:50px;height:80px;" align="middle">
+</a>
+6/8
+<a href="InstructionPointer.html">
+	<img src="Right.png" alt="next>" style="width:50px;height:80px;" align="middle">
+</a>
+</div>
+<br>
+</div>
+</div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55886101-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

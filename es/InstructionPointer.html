@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<html>
+<body>
+<div class="wrap">
+<ul>
+ <li><a href="Binary.html"><b>SimpleCPU.com</b></a>&nbsp;&nbsp;</li>
+ <li><a href="about.html">about</a></li>
+</ul><br>
+<div class="content">
+But how does the CPU know where to get its instructions?<br>
+<br>
+On the CPU, there is a tiny amount of memory. It does various things, such as<br>
+hold something called the "instruction pointer". The instruction pointer <br>
+holds the location of the next instruction, and increments itself after <br>
+every instruction. So basically, the CPU reads the instruction pointer,<br>
+fetches the next instruction, does it, increments the instruction pointer<br>
+and then goes back to step one.<br>
+<br>
+The value of the instruction pointer itself can be set to some arbitrary <br>
+location in memory. You ever wonder what an infinite loop is on a computer?<br> It's what happens when an instruction pointer is set to instructions that <br>
+keep telling the instruction pointer to set itself to that same set of <br>
+instructions.<br>
+<br>
+<div class="center">
+<a href="code.html">
+	<img src="Left.png" alt="<left" style="width:50px;height:80px;" align="middle">
+</a>
+7/8
+<a href="cpu.html">
+	<img src="Right.png" alt="next>" style="width:50px;height:80px;" align="middle">
+</a>
+</div>
+<br>
+</div>
+</div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55886101-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
