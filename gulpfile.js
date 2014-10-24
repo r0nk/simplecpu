@@ -11,7 +11,8 @@ gulp.task('build', function() {
   		// debug: true
   	})
 	.require('./assets/NAND.js', {expose: 'NAND'})
-	.require('./assets/adder.js', {expose: 'adder'});
+	.require('./assets/adder.js', {expose: 'adder'})
+	.require('./assets/memory.js', {expose: 'memory'});
 
 	if (global.watchingChanges) {
 		bundler = watchify(bundler);
