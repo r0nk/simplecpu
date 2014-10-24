@@ -1,39 +1,45 @@
-//main(only) library file
-var lamps  = new Array();
-var levers = new Array(); 
-var gates  = new Array();
-var joins  = new Array();
-var wires  = new Array();
-
-var NAND = 0;
-var AND  = 1;
-var OR   = 2;
-var XOR  = 3;
-var tNAND = 4;//slightly grey-colored NAND
-//have to have this as globals 
-var c;
 var ctx;
+
+//main(only) library file
+var lamps = exports.lamps  = new Array();
+var levers = exports.levers = new Array(); 
+var gates = exports.gates  = new Array();
+var joins = exports.joins  = new Array();
+var wires = exports.wires  = new Array();
+
+var NAND = exports.NAND = 0;
+var AND = exports.AND  = 1;
+var OR = exports.OR   = 2;
+var XOR = exports.XOR  = 3;
+var tNAND = exports.tNAND = 4;//slightly grey-colored NAND
+
+exports.setCtx = function(value) {
+	ctx = value;
+}
+
 //start of objects
-function Join(x,y,wire1,wire2){
+var Join = exports.Join = function(x,y,wire1,wire2){
 	//a Join connects two wires together
 	this.x = x;
 	this.y = y;
 	this.wire1 = wire1;
 	this.wire2 = wire2;
 }
-function Wire(){
+
+var Wire = exports.Wire = function(){
 	//one value and an array of entities the wire is connected to.
 	this.value = false;
 	this.connections = new Array();
 }	
-function Lever(x,y,wire){ 
+var Lever = exports.Lever = function(x,y,wire){ 
 	this.x = x;	
 	this.y = y;	
 	this.r = 0;
 	this.s = 1;
 	this.wire = wire;//wire index; not actually a wire
 }
-function Gate(kind,x,y,a,b,out){
+
+var Gate = exports.Gate = function(kind,x,y,a,b,out){
 	this.kind = kind;
 	this.x = x;
 	this.y = y;
@@ -45,7 +51,8 @@ function Gate(kind,x,y,a,b,out){
 	this.b = b;
 	this.out = out;
 }
-function Lamp(x,y,wire){
+
+var Lamp = exports.Lamp = function(x,y,wire){
 	this.x = x;	
 	this.y = y;	
 	this.r = 0;
@@ -53,7 +60,7 @@ function Lamp(x,y,wire){
 	this.wire = wire;//wire index; not actually a wire
 }
 //start of action functions
-function mapWires(){
+var mapWires = exports.mapWires = function(){
 	//reads through array of all elements, and maps locations to the wire
 	//array
 	//only called once after the arrays of elements are mapped
@@ -136,7 +143,8 @@ function mapWires(){
 		wires[l].connections[j] = p;
 	}
 }
-function checkAt(x,y){
+
+var checkAt = exports.checkAt = function(x,y){
 	for(i=0;i<levers.length;i++){
 		if(x > levers[i].x && x < (levers[i].x + 30)){
 		 if(y > levers[i].y && y < (levers[i].y + 60)){
@@ -145,7 +153,8 @@ function checkAt(x,y){
 		}
 	}
 }
-function gateStep(){
+
+var gateStep = exports.gateStep = function(){
 	//calculate gate logic
 	for(i=0;i<gates.length;i++){
 		switch(gates[i].kind){
@@ -169,20 +178,22 @@ function gateStep(){
 		}
 	}
 }
-function joinStep(){
+
+var joinStep = exports.joinStep = function(){
 	for(i=0;i<joins.length;i++){
 		a = joins[i].wire1;
 		b = joins[i].wire2;
 		wires[b].value = wires[a].value 
 	}
 }
-function update(){
+
+var update = exports.update = function(){
 	gateStep();
 	//joinStep has to be last
 	joinStep();
 }
 //start of drawing fucntions
-function drawLamp(l){
+var drawLamp = exports.drawLamp = function(l){
 	ctx.beginPath();
 	ctx.setTransform(l.s,0,0,l.s,l.x,l.y - 10);	
 	if(wires[l.wire].value){
@@ -204,7 +215,8 @@ function drawLamp(l){
 	ctx.stroke();
 	ctx.fillStyle = "#000000";
 }
-function drawLever(l){
+
+var drawLever = exports.drawLever = function(l){
 	ctx.beginPath();
 	ctx.setTransform(l.s,0,0,l.s,l.x,l.y);	
 	ctx.rotate(l.r*(Math.PI/180));
@@ -222,7 +234,8 @@ function drawLever(l){
 		ctx.fillText("off",4,20);	
 	}
 }
-function drawGate(n){
+
+var drawGate = exports.drawGate = function(n){
 	ctx.strokeStyle = "#000000";
 	ctx.beginPath();
 	ctx.setTransform(1,0,0,1,n.x,n.y);	
@@ -261,7 +274,8 @@ function drawGate(n){
 	}
 	ctx.stroke();
 }
-function drawWire(w){
+
+var drawWire = exports.drawWire = function(w){
 	//for simplicities sake, it only draws one line, 
 	//however, the wire may be connected to more,
 	//this is usefull in the case of joins in the middle of a wire.
@@ -291,7 +305,8 @@ function drawWire(w){
 	ctx.stroke();
 	ctx.strokeStyle = "#000000";
 }
-function drawJoin(j){
+
+var drawJoin = exports.drawJoin = function(j){
 	ctx.beginPath();
 	ctx.setTransform(1,0,0,1,j.x-2,j.y-2);	
 	if(wires[j.wire1].value){
@@ -305,7 +320,7 @@ function drawJoin(j){
 	ctx.fillStyle = "#000000";
 }
 
-function drawFrame(){
+var drawFrame = exports.drawFrame = function(){
 	ctx.setTransform(1,0,0,1,0,0);	
 	ctx.clearRect(0,0,1000,1000);
 	//draws everything onto the canvas 
