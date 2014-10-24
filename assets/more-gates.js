@@ -1,17 +1,6 @@
 var gatesLib = require('./lib/gates')
-  , c = null
-  , ctx = null;
-
-function clicker(e){
-	 gatesLib.checkAt(e.pageX-ctx.canvas.offsetLeft,e.pageY-ctx.canvas.offsetTop);
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.drawFrame();
-}
+  , common = require('./util/common-setup')
+  , ctx = common.getContext();
 
 window.drawComments = function(){
 	ctx.setTransform(1,0,0,1,0,0);
@@ -53,15 +42,6 @@ window.drawComments = function(){
 }
 
 function setup(){
-	//standard setup
-	c = document.getElementById("gates");
-	c.onselectstart = function(){return false;}
-	ctx = c.getContext("2d");
-	ctx.font = "16px Arial";
-	gatesLib.setCtx(ctx);
-
-	c.addEventListener('click',clicker,false);
-	//page unique setup
 	for(i=0;i<=22;i++) {
 		gatesLib.wires[i] = new gatesLib.Wire();
 	}

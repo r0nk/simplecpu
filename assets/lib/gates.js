@@ -13,6 +13,8 @@ var OR = exports.OR   = 2;
 var XOR = exports.XOR  = 3;
 var tNAND = exports.tNAND = 4;//slightly grey-colored NAND
 
+window.drawComments = function() {}
+
 exports.setCtx = function(value) {
 	ctx = value;
 }

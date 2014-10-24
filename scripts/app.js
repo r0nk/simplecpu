@@ -14,6 +14,8 @@ var OR = exports.OR   = 2;
 var XOR = exports.XOR  = 3;
 var tNAND = exports.tNAND = 4;//slightly grey-colored NAND
 
+window.drawComments = function() {}
+
 exports.setCtx = function(value) {
 	ctx = value;
 }
@@ -343,9 +345,8 @@ var drawFrame = exports.drawFrame = function(){
 	drawComments();
 }
 
-},{}],"NAND":[function(require,module,exports){
-var gatesLib = require('./lib/gates')
-  , c = null
+},{}],"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js":[function(require,module,exports){
+var gatesLib = require('../lib/gates')
   , ctx = null;
 
 function clicker(e){
@@ -359,19 +360,26 @@ function clicker(e){
 	 gatesLib.drawFrame();
 }
 
-window.drawComments = function(){
-}
+exports.getContext = function() {
+	if (ctx) return ctx;
 
-function setup(){
-	//standard setup
 	c = document.getElementById("gates");
+	
 	c.onselectstart = function(){return false;}
 	ctx = c.getContext("2d");
 	ctx.font = "16px Arial";
 	gatesLib.setCtx(ctx);
 
 	c.addEventListener('click',clicker,false);
-	//page unique setup
+
+	return ctx;
+}
+},{"../lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js"}],"NAND":[function(require,module,exports){
+var gatesLib = require('./lib/gates')
+  , common = require('./util/common-setup')
+  , ctx = common.getContext();
+
+function setup(){
 	for(i=0;i<3;i++) {
 		gatesLib.wires[i] = new gatesLib.Wire();
 	}
@@ -392,21 +400,10 @@ function setup(){
 }
 
 setup();
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js"}],"adder":[function(require,module,exports){
+},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"adder":[function(require,module,exports){
 var gatesLib = require('./lib/gates')
-  , c = null
-  , ctx = null;
-
-function clicker(e){
-	 gatesLib.checkAt(e.pageX-ctx.canvas.offsetLeft,e.pageY-ctx.canvas.offsetTop);
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.drawFrame();
-}
+  , common = require('./util/common-setup')
+  , ctx = common.getContext();
 
 window.drawComments = function(){
 	ctx.setTransform(1,0,0,1,0,0);	
@@ -417,16 +414,8 @@ window.drawComments = function(){
 	ctx.fillText("carry out",165,452);
 	ctx.fillText("value",380,100);
 }
-function setup(){
-	//standard setup
-	c = document.getElementById("gates");
-	c.onselectstart = function(){return false;}
-	ctx = c.getContext("2d");
-	ctx.font = "16px Arial";
-	gatesLib.setCtx(ctx);
 
-	c.addEventListener('click',clicker,false);
-	//page unique setup
+function setup(){
 	for(i=0;i<12;i++)
 		gatesLib.wires[i] = new gatesLib.Wire();
 
@@ -459,7 +448,7 @@ function setup(){
 setup();
 
 
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js"}],"binary":[function(require,module,exports){
+},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"binary":[function(require,module,exports){
 var c = document.getElementById("binaryInc");
 c.onselectstart = function(){return false;}
 var ctx = c.getContext("2d");
@@ -763,32 +752,10 @@ update();
 
 },{}],"memory":[function(require,module,exports){
 var gatesLib = require('./lib/gates')
-  , c = null
-  , ctx = null;
+  , common = require('./util/common-setup')
+  , ctx = common.getContext();
 
-function clicker(e){
-	 gatesLib.checkAt(e.pageX-ctx.canvas.offsetLeft,e.pageY-ctx.canvas.offsetTop);
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.drawFrame();
-}
-
-window.drawComments = function(){
-}
 function setup(){
-	//standard setup
-	c = document.getElementById("gates");
-	c.onselectstart = function(){return false;}
-	ctx = c.getContext("2d");
-	ctx.font = "16px Arial";
-	gatesLib.setCtx(ctx);
-
-	c.addEventListener('click',clicker,false);
-	//page unique setup
 	for(i=0;i<=12;i++) {
 		gatesLib.wires[i] = new gatesLib.Wire();
 	}
@@ -821,21 +788,10 @@ function setup(){
 }
 setup();
 
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js"}],"more-gates":[function(require,module,exports){
+},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"more-gates":[function(require,module,exports){
 var gatesLib = require('./lib/gates')
-  , c = null
-  , ctx = null;
-
-function clicker(e){
-	 gatesLib.checkAt(e.pageX-ctx.canvas.offsetLeft,e.pageY-ctx.canvas.offsetTop);
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.drawFrame();
-}
+  , common = require('./util/common-setup')
+  , ctx = common.getContext();
 
 window.drawComments = function(){
 	ctx.setTransform(1,0,0,1,0,0);
@@ -877,15 +833,6 @@ window.drawComments = function(){
 }
 
 function setup(){
-	//standard setup
-	c = document.getElementById("gates");
-	c.onselectstart = function(){return false;}
-	ctx = c.getContext("2d");
-	ctx.font = "16px Arial";
-	gatesLib.setCtx(ctx);
-
-	c.addEventListener('click',clicker,false);
-	//page unique setup
 	for(i=0;i<=22;i++) {
 		gatesLib.wires[i] = new gatesLib.Wire();
 	}
@@ -930,4 +877,4 @@ function setup(){
 }
 setup();
 
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js"}]},{},[]);
+},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}]},{},[]);
