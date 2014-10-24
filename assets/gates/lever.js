@@ -8,7 +8,7 @@ function Lever(x, y, wire){
 	this.wire = wire;//wire index; not actually a wire
 }
 
-Lever.draw = function(ctx, wires, lever){
+Lever.draw = function(wires, lever, ctx){
 	ctx.beginPath();
 	ctx.setTransform(lever.s, 0, 0, lever.s, lever.x, lever.y);	
 	ctx.rotate(lever.r*(Math.PI/180));

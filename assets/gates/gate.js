@@ -19,7 +19,7 @@ function Gate(kind,x,y,a,b,out){
 	this.out = out;
 }
 
-Gate.draw = function(ctx, gate){
+Gate.draw = function(gate, ctx){
 	ctx.strokeStyle = "#000000";
 	ctx.beginPath();
 	ctx.setTransform(1, 0, 0, 1, gate.x, gate.y);	

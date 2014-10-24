@@ -8,7 +8,7 @@ function Lamp(x,y,wireIdx){
 	this.wireIdx = wireIdx; //wire index; not actually a wire
 }
 
-Lamp.draw = function(ctx, wires, lamp){
+Lamp.draw = function(wires, lamp, ctx){
 	ctx.beginPath();
 	ctx.setTransform(lamp.s, 0, 0, lamp.s, lamp.x, lamp.y - 10);	
 	if(wires[lamp.wireIdx].value){

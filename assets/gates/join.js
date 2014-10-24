@@ -8,7 +8,7 @@ function Join(x,y,wire1,wire2){
 	this.wire2 = wire2;
 }
 
-Join.draw = function(ctx, wires, join){
+Join.draw = function(wires, join, ctx){
 	ctx.beginPath();
 	ctx.setTransform(1, 0, 0, 1, join.x-2, join.y-2);	
 	if(wires[join.wire1].value){

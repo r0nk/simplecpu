@@ -6,7 +6,11 @@ function Wire(){
 	this.connections = new Array();
 }	
 
-Wire.draw = function(ctx, wire){
+Wire.list = function(num) {
+	return Array.apply(null, new Array(num)).map(function() { return new Wire(); });
+}
+
+Wire.draw = function(wire, ctx){
 	//for simplicities sake, it only draws one line, 
 	//however, the wire may be connected to more,
 	//this is usefull in the case of joins in the middle of a wire.

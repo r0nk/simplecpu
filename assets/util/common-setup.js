@@ -1,27 +1,22 @@
-var gatesLib = require('../gates/index')
-  , ctx = null;
+var c = document.getElementById('gates')
+  , ctx = c.getContext('2d');
 
-function clicker(e){
-	 gatesLib.checkAt(e.pageX-ctx.canvas.offsetLeft,e.pageY-ctx.canvas.offsetTop);
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.update();
-	 gatesLib.drawFrame(ctx);
+c.onselectstart = function(){return false;}
+ctx.font = "16px Arial";
+
+module.exports = function(composite) {
+	c.addEventListener('click', clickHandler.bind(undefined, composite), false);
 }
 
-exports.getContext = function() {
-	if (ctx) return ctx;
+module.exports.context = ctx;
 
-	c = document.getElementById("gates");
-	
-	c.onselectstart = function(){return false;}
-	ctx = c.getContext("2d");
-	ctx.font = "16px Arial";
-
-	c.addEventListener('click',clicker,false);
-
-	return ctx;
+function clickHandler(composite, e){
+	 composite.checkAt(e.pageX-ctx.canvas.offsetLeft,e.pageY-ctx.canvas.offsetTop);
+	 composite.update();
+	 composite.update();
+	 composite.update();
+	 composite.update();
+	 composite.update();
+	 composite.update();
+	 composite.render(ctx);
 }
