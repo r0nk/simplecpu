@@ -10,7 +10,7 @@ gulp.task('build', function() {
   		// leave debug out until we are uglifying too
   		// debug: true
   	})
-	.add('./assets/NAND.js');
+	.require('./assets/NAND.js', {expose: 'NAND'});
 
 	if (global.watchingChanges) {
 		bundler = watchify(bundler);
@@ -23,7 +23,7 @@ gulp.task('build', function() {
 		console.log('['+(new Date()).toTimeString().split(' ')[0]+'] bundling...');
 		bundler.bundle()
 		.on('error', function(err) { console.log(err); })
-		.pipe(source('NAND.js'))
+		.pipe(source('app.js'))
 		.pipe(gulp.dest('scripts'));
 	}
 });
