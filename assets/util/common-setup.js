@@ -1,4 +1,4 @@
-var gatesLib = require('../lib/gates')
+var gatesLib = require('../gates/index')
   , ctx = null;
 
 function clicker(e){
@@ -9,7 +9,7 @@ function clicker(e){
 	 gatesLib.update();
 	 gatesLib.update();
 	 gatesLib.update();
-	 gatesLib.drawFrame();
+	 gatesLib.drawFrame(ctx);
 }
 
 exports.getContext = function() {
@@ -20,7 +20,6 @@ exports.getContext = function() {
 	c.onselectstart = function(){return false;}
 	ctx = c.getContext("2d");
 	ctx.font = "16px Arial";
-	gatesLib.setCtx(ctx);
 
 	c.addEventListener('click',clicker,false);
 

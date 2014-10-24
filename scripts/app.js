@@ -1,48 +1,13 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js":[function(require,module,exports){
-var ctx;
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/gate.js":[function(require,module,exports){
+module.exports = Gate;
 
-//main(only) library file
-var lamps = exports.lamps  = new Array();
-var levers = exports.levers = new Array(); 
-var gates = exports.gates  = new Array();
-var joins = exports.joins  = new Array();
-var wires = exports.wires  = new Array();
+Gate.NAND  = 0;
+Gate.AND   = 1;
+Gate.OR    = 2;
+Gate.XOR   = 3;
+Gate.tNAND = 4;
 
-var NAND = exports.NAND = 0;
-var AND = exports.AND  = 1;
-var OR = exports.OR   = 2;
-var XOR = exports.XOR  = 3;
-var tNAND = exports.tNAND = 4;//slightly grey-colored NAND
-
-window.drawComments = function() {}
-
-exports.setCtx = function(value) {
-	ctx = value;
-}
-
-//start of objects
-var Join = exports.Join = function(x,y,wire1,wire2){
-	//a Join connects two wires together
-	this.x = x;
-	this.y = y;
-	this.wire1 = wire1;
-	this.wire2 = wire2;
-}
-
-var Wire = exports.Wire = function(){
-	//one value and an array of entities the wire is connected to.
-	this.value = false;
-	this.connections = new Array();
-}	
-var Lever = exports.Lever = function(x,y,wire){ 
-	this.x = x;	
-	this.y = y;	
-	this.r = 0;
-	this.s = 1;
-	this.wire = wire;//wire index; not actually a wire
-}
-
-var Gate = exports.Gate = function(kind,x,y,a,b,out){
+function Gate(kind,x,y,a,b,out){
 	this.kind = kind;
 	this.x = x;
 	this.y = y;
@@ -55,139 +20,190 @@ var Gate = exports.Gate = function(kind,x,y,a,b,out){
 	this.out = out;
 }
 
-var Lamp = exports.Lamp = function(x,y,wire){
-	this.x = x;	
-	this.y = y;	
-	this.r = 0;
-	this.s = 1;
-	this.wire = wire;//wire index; not actually a wire
+Gate.draw = function(ctx, gate){
+	ctx.strokeStyle = "#000000";
+	ctx.beginPath();
+	ctx.setTransform(1, 0, 0, 1, gate.x, gate.y);	
+	switch(gate.kind){
+	case Gate.tNAND:
+		ctx.strokeStyle = "#BBBBBB";
+	case Gate.NAND:
+		ctx.rotate(gate.r*(Math.PI/180));
+		ctx.arc(0, 0, 30, 0-(Math.PI/2), Math.PI/2);
+		ctx.closePath();
+		ctx.moveTo(45, 0);
+		ctx.arc(37, 0, 7, 0, Math.PI*2);
+		break;
+	case Gate.AND:
+		ctx.lineTo(30, 0);	
+		ctx.arc(0, 30, 30, 0, Math.PI);
+		ctx.lineTo(-30, 0);	
+		ctx.closePath();
+		break;
+	case Gate.OR:
+		ctx.arc(0, 0, 30, 0, Math.PI);
+		ctx.moveTo(30, 0);	
+		ctx.arc(0, 30, 30, 0, Math.PI);
+		ctx.lineTo(-30, 0);	
+		break;
+	case Gate.XOR:
+		ctx.arc(0, 0, 30, 0-(Math.PI/2), Math.PI/2);
+		ctx.moveTo(30, -30);
+		ctx.lineTo(0, -30);
+		ctx.arc(30, 0, 30, 0-(Math.PI/2), Math.PI/2);
+		ctx.moveTo(30, 30);
+		ctx.lineTo(0, 30);
+		ctx.moveTo(-6, -30);
+		ctx.arc(-15, 0, 30, 0-(Math.PI/2)+0.3, Math.PI/2-0.3);
+		break;
+	}
+	ctx.stroke();
 }
-//start of action functions
+
+},{}],"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/index.js":[function(require,module,exports){
+var Gate = require('./gate')
+  , Wire = require('./wire')
+  , Lever = require('./lever')
+  , Lamp = require('./lamp')
+  , Join = require('./join');
+
+//main(only) library file
+var lamps = exports.lamps  = new Array();
+var levers = exports.levers = new Array(); 
+var gates = exports.gates  = new Array();
+var joins = exports.joins  = new Array();
+var wires = exports.wires  = new Array();
+
+window.drawComments = function() {}
+
 var mapWires = exports.mapWires = function(){
 	//reads through array of all elements, and maps locations to the wire
 	//array
 	//only called once after the arrays of elements are mapped
-	for(i=0;i<gates.length;i++){
-		switch(gates[i].kind){
-		case tNAND:
-		case NAND:
-			j = wires[gates[i].a].connections.length;
-			p = {x:gates[i].x,y:gates[i].y - 15};
-			wires[gates[i].a].connections[j] = p;
+	gates.forEach(function(gate) {
+		switch(gate.kind){
+		case Gate.tNAND:
+		case Gate.NAND:
+			j = wires[gate.a].connections.length;
+			p = {x:gate.x,y:gate.y - 15};
+			wires[gate.a].connections[j] = p;
 
-			j = wires[gates[i].b].connections.length;
-			p = {x:gates[i].x,y:gates[i].y + 15};
-			wires[gates[i].b].connections[j] = p; 
+			j = wires[gate.b].connections.length;
+			p = {x:gate.x,y:gate.y + 15};
+			wires[gate.b].connections[j] = p; 
 
-			j = wires[gates[i].out].connections.length;
-			p = {x:gates[i].x + 43,y:gates[i].y};
-			wires[gates[i].out].connections[j] = p;
+			j = wires[gate.out].connections.length;
+			p = {x:gate.x + 43,y:gate.y};
+			wires[gate.out].connections[j] = p;
 			break;
-		case AND://AND
-			j = wires[gates[i].a].connections.length;
-			p = {x:gates[i].x-15,y:gates[i].y};
-			wires[gates[i].a].connections[j] = p;
+		case Gate.AND://AND
+			j = wires[gate.a].connections.length;
+			p = {x:gate.x-15,y:gate.y};
+			wires[gate.a].connections[j] = p;
 
-			j = wires[gates[i].b].connections.length;
-			p = {x:gates[i].x+15,y:gates[i].y};
-			wires[gates[i].b].connections[j] = p; 
+			j = wires[gate.b].connections.length;
+			p = {x:gate.x+15,y:gate.y};
+			wires[gate.b].connections[j] = p; 
 
-			j = wires[gates[i].out].connections.length;
-			p = {x:gates[i].x,y:gates[i].y+60};
-			wires[gates[i].out].connections[j] = p;
+			j = wires[gate.out].connections.length;
+			p = {x:gate.x,y:gate.y+60};
+			wires[gate.out].connections[j] = p;
 			break;
-		case OR://OR
-			j = wires[gates[i].a].connections.length;
-			p = {x:gates[i].x-15,y:gates[i].y + 25};
-			wires[gates[i].a].connections[j] = p;
+		case Gate.OR://OR
+			j = wires[gate.a].connections.length;
+			p = {x:gate.x-15,y:gate.y + 25};
+			wires[gate.a].connections[j] = p;
 
-			j = wires[gates[i].b].connections.length;
-			p = {x:gates[i].x+15,y:gates[i].y + 25};
-			wires[gates[i].b].connections[j] = p; 
+			j = wires[gate.b].connections.length;
+			p = {x:gate.x+15,y:gate.y + 25};
+			wires[gate.b].connections[j] = p; 
 
-			j = wires[gates[i].out].connections.length;
-			p = {x:gates[i].x,y:gates[i].y+60};
-			wires[gates[i].out].connections[j] = p;
+			j = wires[gate.out].connections.length;
+			p = {x:gate.x,y:gate.y+60};
+			wires[gate.out].connections[j] = p;
 			break;
-		case XOR://XOR
-			j = wires[gates[i].a].connections.length;
-			p = {x:gates[i].x + 10,y:gates[i].y - 15};
-			wires[gates[i].a].connections[j] = p;
+		case Gate.XOR://XOR
+			j = wires[gate.a].connections.length;
+			p = {x:gate.x + 10,y:gate.y - 15};
+			wires[gate.a].connections[j] = p;
 
-			j = wires[gates[i].b].connections.length;
-			p = {x:gates[i].x + 10,y:gates[i].y + 15};
-			wires[gates[i].b].connections[j] = p; 
+			j = wires[gate.b].connections.length;
+			p = {x:gate.x + 10,y:gate.y + 15};
+			wires[gate.b].connections[j] = p; 
 
-			j = wires[gates[i].out].connections.length;
-			p = {x:gates[i].x + 60,y:gates[i].y};
-			wires[gates[i].out].connections[j] = p;
+			j = wires[gate.out].connections.length;
+			p = {x:gate.x + 60,y:gate.y};
+			wires[gate.out].connections[j] = p;
 			break;
 		}
-	}
-	for(i=0;i<levers.length;i++){
-		l = levers[i].wire;
+	});
+	
+	levers.forEach(function(lever) {
+		l = lever.wire;
 		j = wires[l].connections.length;
-		p = {x:levers[i].x+15,y:levers[i].y+30};
+		p = {x:lever.x+15,y:lever.y+30};
 		wires[l].connections[j] = p;
-	}
-	for(i=0;i<lamps.length;i++){
-		l = lamps[i].wire;
+	});
+	
+	lamps.forEach(function(lamp) {
+		l = lamp.wireIdx;
 		j = wires[l].connections.length;
-		p = {x:lamps[i].x+10,y:lamps[i].y};
+		p = {x:lamp.x+10,y:lamp.y};
 		wires[l].connections[j] = p;
-	}
-	for(i=0;i<joins.length;i++){
-		l = joins[i].wire1;
+	});
+
+	joins.forEach(function(join) {
+		l = join.wire1;
 		j = wires[l].connections.length;
-		p = {x:joins[i].x,y:joins[i].y};
+		p = {x:join.x,y:join.y};
 		wires[l].connections[j] = p;
-		l = joins[i].wire2;
+		l = join.wire2;
 		j = wires[l].connections.length;
 		wires[l].connections[j] = p;
-	}
+	});
 }
 
 var checkAt = exports.checkAt = function(x,y){
-	for(i=0;i<levers.length;i++){
-		if(x > levers[i].x && x < (levers[i].x + 30)){
-		 if(y > levers[i].y && y < (levers[i].y + 60)){
-		  wires[levers[i].wire].value = !wires[levers[i].wire].value;
+	levers.forEach(function(lever) {
+		if(x > lever.x && x < (lever.x + 30)){
+		 if(y > lever.y && y < (lever.y + 60)){
+		  wires[lever.wire].value = !wires[lever.wire].value;
 		 }
 		}
-	}
+	});
 }
 
 var gateStep = exports.gateStep = function(){
 	//calculate gate logic
-	for(i=0;i<gates.length;i++){
-		switch(gates[i].kind){
-		case tNAND:
-		case NAND:
-			wires[gates[i].out].value = 
-	 	 	 !(wires[gates[i].a].value && wires[gates[i].b].value);
+	gates.forEach(function(gate) {
+		switch(gate.kind){
+		case Gate.tNAND:
+		case Gate.NAND:
+			wires[gate.out].value = 
+	 	 	 !(wires[gate.a].value && wires[gate.b].value);
 			break;
-		case AND:
-			wires[gates[i].out].value = 
-	 	 	 (wires[gates[i].a].value && wires[gates[i].b].value);
+		case Gate.AND:
+			wires[gate.out].value = 
+	 	 	 (wires[gate.a].value && wires[gate.b].value);
 			break;
-		case OR:
-			wires[gates[i].out].value = 
-	 	 	 (wires[gates[i].a].value || wires[gates[i].b].value);
+		case Gate.OR:
+			wires[gate.out].value = 
+	 	 	 (wires[gate.a].value || wires[gate.b].value);
 			break;
-		case XOR:
-			wires[gates[i].out].value = 
-	 	 	 (wires[gates[i].a].value != wires[gates[i].b].value);
+		case Gate.XOR:
+			wires[gate.out].value = 
+	 	 	 (wires[gate.a].value != wires[gate.b].value);
 			break;
 		}
-	}
+	});
 }
 
 var joinStep = exports.joinStep = function(){
-	for(i=0;i<joins.length;i++){
-		a = joins[i].wire1;
-		b = joins[i].wire2;
+	joins.forEach(function(join) {
+		a = join.wire1;
+		b = join.wire2;
 		wires[b].value = wires[a].value 
-	}
+	});
 }
 
 var update = exports.update = function(){
@@ -195,158 +211,162 @@ var update = exports.update = function(){
 	//joinStep has to be last
 	joinStep();
 }
-//start of drawing fucntions
-var drawLamp = exports.drawLamp = function(l){
+
+var drawFrame = exports.drawFrame = function(ctx){
+	ctx.setTransform(1,0,0,1,0,0);	
+	ctx.clearRect(0,0,1000,1000);
+
+	wires.forEach(function(wire) {
+		Wire.draw(ctx, wire);
+	});
+
+	lamps.forEach(function(lamp) {
+		Lamp.draw(ctx, wires, lamp);
+	});
+
+	levers.forEach(function(lever) {
+		Lever.draw(ctx, wires, lever);
+	});
+
+	gates.forEach(function(gate) {
+		Gate.draw(ctx, gate);
+	});
+
+	joins.forEach(function(join) {
+		Join.draw(ctx, wires, join);
+	});
+
+	drawComments();
+}
+
+},{"./gate":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/gate.js","./join":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/join.js","./lamp":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lamp.js","./lever":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lever.js","./wire":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/wire.js"}],"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/join.js":[function(require,module,exports){
+module.exports = Join;
+
+function Join(x,y,wire1,wire2){
+	//a Join connects two wires together
+	this.x = x;
+	this.y = y;
+	this.wire1 = wire1;
+	this.wire2 = wire2;
+}
+
+Join.draw = function(ctx, wires, join){
 	ctx.beginPath();
-	ctx.setTransform(l.s,0,0,l.s,l.x,l.y - 10);	
-	if(wires[l.wire].value){
-		grd = ctx.createRadialGradient(10,10,0,10,10,20);
-		grd.addColorStop(0,"rgba(100,255,100,1.0)");
-		grd.addColorStop(1,"rgba(100,255,100,0.0)");
+	ctx.setTransform(1, 0, 0, 1, join.x-2, join.y-2);	
+	if(wires[join.wire1].value){
+		ctx.fillStyle = "#00AA00";
+		ctx.fillRect(-1, -1, 6, 6);
+		ctx.fillStyle = "#FFFFFF";
+	}else{
+		ctx.fillStyle = "#FF0000";
+	}
+	ctx.fillRect(0, 0, 4, 4);
+	ctx.fillStyle = "#000000";
+}
+},{}],"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lamp.js":[function(require,module,exports){
+module.exports = Lamp;
+
+function Lamp(x,y,wireIdx){
+	this.x = x;	
+	this.y = y;	
+	this.r = 0;
+	this.s = 1;
+	this.wireIdx = wireIdx; //wire index; not actually a wire
+}
+
+Lamp.draw = function(ctx, wires, lamp){
+	ctx.beginPath();
+	ctx.setTransform(lamp.s, 0, 0, lamp.s, lamp.x, lamp.y - 10);	
+	if(wires[lamp.wireIdx].value){
+		grd = ctx.createRadialGradient(10, 10, 0, 10, 10, 20);
+		grd.addColorStop(0, "rgba(100, 255, 100, 1.0)");
+		grd.addColorStop(1, "rgba(100, 255, 100, 0.0)");
 		ctx.fillStyle = grd;
-		ctx.fillRect(-10,-10,40,40);
-		ctx.fillStyle = "rgba(255,255,255,1.0)";
-		ctx.fillRect(0,0,20,20);
+		ctx.fillRect(-10, -10, 40, 40);
+		ctx.fillStyle = "rgba(255, 255, 255, 1.0)";
+		ctx.fillRect(0, 0, 20, 20);
 		ctx.fillStyle = "#88FF88";
-		ctx.fillText("on",0,15);
+		ctx.fillText("on", 0, 15);
 	}else{
 		ctx.fillStyle = "#BBBBBB";
-		ctx.fillRect(0,0,20,20);
+		ctx.fillRect(0, 0, 20, 20);
 		ctx.fillStyle = "#888888";
-		ctx.fillText("off",0,15);	
+		ctx.fillText("off", 0, 15);	
 	}	
 	ctx.stroke();
 	ctx.fillStyle = "#000000";
 }
 
-var drawLever = exports.drawLever = function(l){
+},{}],"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lever.js":[function(require,module,exports){
+module.exports = Lever;
+
+function Lever(x, y, wire){ 
+	this.x = x;	
+	this.y = y;	
+	this.r = 0;
+	this.s = 1;
+	this.wire = wire;//wire index; not actually a wire
+}
+
+Lever.draw = function(ctx, wires, lever){
 	ctx.beginPath();
-	ctx.setTransform(l.s,0,0,l.s,l.x,l.y);	
-	ctx.rotate(l.r*(Math.PI/180));
+	ctx.setTransform(lever.s, 0, 0, lever.s, lever.x, lever.y);	
+	ctx.rotate(lever.r*(Math.PI/180));
 	ctx.fillStyle = "#000000";
-	ctx.fillRect(0,0,30,60);
-	if(wires[l.wire].value){
+	ctx.fillRect(0, 0, 30, 60);
+	if(wires[lever.wire].value){
 		ctx.fillStyle = "#AAFFAA";
-		ctx.fillRect(0,30,30,30);
+		ctx.fillRect(0, 30, 30, 30);
 		ctx.fillStyle = "#000000";
-		ctx.fillText("on",4,50);	
+		ctx.fillText("on", 4, 50);	
 	}else{
 		ctx.fillStyle = "#FFAAAA";
-		ctx.fillRect(0,0,30,30);
+		ctx.fillRect(0, 0, 30, 30);
 		ctx.fillStyle = "#000000";
-		ctx.fillText("off",4,20);	
+		ctx.fillText("off", 4, 20);	
 	}
 }
+},{}],"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/wire.js":[function(require,module,exports){
+module.exports = Wire;
 
-var drawGate = exports.drawGate = function(n){
-	ctx.strokeStyle = "#000000";
-	ctx.beginPath();
-	ctx.setTransform(1,0,0,1,n.x,n.y);	
-	switch(n.kind){
-	case tNAND:
-		ctx.strokeStyle = "#BBBBBB";
-	case NAND:
-		ctx.rotate(n.r*(Math.PI/180));
-		ctx.arc(0,0,30,0-(Math.PI/2),Math.PI/2);
-		ctx.closePath();
-		ctx.moveTo(45,0);
-		ctx.arc(37,0,7,0,Math.PI*2);
-		break;
-	case AND:
-		ctx.lineTo(30,0);	
-		ctx.arc(0,30,30,0,Math.PI);
-		ctx.lineTo(-30,0);	
-		ctx.closePath();
-		break;
-	case OR:
-		ctx.arc(0,0,30,0,Math.PI);
-		ctx.moveTo(30,0);	
-		ctx.arc(0,30,30,0,Math.PI);
-		ctx.lineTo(-30,0);	
-		break;
-	case XOR:
-		ctx.arc(0,0,30,0-(Math.PI/2),Math.PI/2);
-		ctx.moveTo(30,-30);
-		ctx.lineTo(0,-30);
-		ctx.arc(30,0,30,0-(Math.PI/2),Math.PI/2);
-		ctx.moveTo(30,30);
-		ctx.lineTo(0,30);
-		ctx.moveTo(-6,-30);
-		ctx.arc(-15,0,30,0-(Math.PI/2)+0.3,Math.PI/2-0.3);
-		break;
-	}
-	ctx.stroke();
-}
+function Wire(){
+	//one value and an array of entities the wire is connected to.
+	this.value = false;
+	this.connections = new Array();
+}	
 
-var drawWire = exports.drawWire = function(w){
+Wire.draw = function(ctx, wire){
 	//for simplicities sake, it only draws one line, 
 	//however, the wire may be connected to more,
 	//this is usefull in the case of joins in the middle of a wire.
-	if(w.value){
+	if(wire.value){
 		ctx.strokeStyle = "#00AA00";
 		ctx.lineWidth = 4;
 		ctx.beginPath();
-		ctx.setTransform(1,0,0,1,0,0);
-		ctx.moveTo(w.connections[0].x,w.connections[0].y);
-		ctx.lineTo(w.connections[1].x,w.connections[1].y);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.moveTo(wire.connections[0].x, wire.connections[0].y);
+		ctx.lineTo(wire.connections[1].x, wire.connections[1].y);
 		ctx.stroke();
 		ctx.strokeStyle = "#FFFFFF";
 		ctx.lineWidth = 2;
 		ctx.beginPath();
-		ctx.setTransform(1,0,0,1,0,0);
-		ctx.moveTo(w.connections[0].x,w.connections[0].y);
-		ctx.lineTo(w.connections[1].x,w.connections[1].y);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.moveTo(wire.connections[0].x, wire.connections[0].y);
+		ctx.lineTo(wire.connections[1].x, wire.connections[1].y);
 		ctx.stroke();
 		ctx.lineWidth = 1;
 	}else{
 		ctx.strokeStyle = "#FF0000";
 	}
 	ctx.beginPath();
-	ctx.setTransform(1,0,0,1,0,0);
-	ctx.moveTo(w.connections[0].x,w.connections[0].y);
-	ctx.lineTo(w.connections[1].x,w.connections[1].y);
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	ctx.moveTo(wire.connections[0].x, wire.connections[0].y);
+	ctx.lineTo(wire.connections[1].x, wire.connections[1].y);
 	ctx.stroke();
 	ctx.strokeStyle = "#000000";
 }
-
-var drawJoin = exports.drawJoin = function(j){
-	ctx.beginPath();
-	ctx.setTransform(1,0,0,1,j.x-2,j.y-2);	
-	if(wires[j.wire1].value){
-		ctx.fillStyle = "#00AA00";
-		ctx.fillRect(-1,-1,6,6);
-		ctx.fillStyle = "#FFFFFF";
-	}else{
-		ctx.fillStyle = "#FF0000";
-	}
-	ctx.fillRect(0,0,4,4);
-	ctx.fillStyle = "#000000";
-}
-
-var drawFrame = exports.drawFrame = function(){
-	ctx.setTransform(1,0,0,1,0,0);	
-	ctx.clearRect(0,0,1000,1000);
-	//draws everything onto the canvas 
-	for(i = 0;i<=wires.length-1;i++){
-		drawWire(wires[i]);
-	}
-	for(i = 0;i<=lamps.length-1;i++){
-		drawLamp(lamps[i]);
-	}
-	for(i = 0;i<=levers.length-1;i++){
-		drawLever(levers[i]);
-	}
-	for(i = 0;i<=gates.length-1;i++){
-		drawGate(gates[i]);
-	}
-	for(i = 0;i<=joins.length-1;i++){
-		drawJoin(joins[i]);
-	}
-	drawComments();
-}
-
 },{}],"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js":[function(require,module,exports){
-var gatesLib = require('../lib/gates')
+var gatesLib = require('../gates/index')
   , ctx = null;
 
 function clicker(e){
@@ -357,7 +377,7 @@ function clicker(e){
 	 gatesLib.update();
 	 gatesLib.update();
 	 gatesLib.update();
-	 gatesLib.drawFrame();
+	 gatesLib.drawFrame(ctx);
 }
 
 exports.getContext = function() {
@@ -368,27 +388,31 @@ exports.getContext = function() {
 	c.onselectstart = function(){return false;}
 	ctx = c.getContext("2d");
 	ctx.font = "16px Arial";
-	gatesLib.setCtx(ctx);
 
 	c.addEventListener('click',clicker,false);
 
 	return ctx;
 }
-},{"../lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js"}],"NAND":[function(require,module,exports){
-var gatesLib = require('./lib/gates')
+},{"../gates/index":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/index.js"}],"NAND":[function(require,module,exports){
+var gatesLib = require('./gates/index')
+  , Gate = require('./gates/gate')
+  , Wire = require('./gates/wire')
+  , Lever = require('./gates/lever')
+  , Lamp = require('./gates/lamp')
   , common = require('./util/common-setup')
   , ctx = common.getContext();
 
 function setup(){
 	for(i=0;i<3;i++) {
-		gatesLib.wires[i] = new gatesLib.Wire();
+		gatesLib.wires[i] = new Wire();
 	}
 
-	gatesLib.levers[0] = new gatesLib.Lever(8,10,0);
-	gatesLib.levers[1] = new gatesLib.Lever(8,95,1);
-	gatesLib.gates[0] = new gatesLib.Gate(gatesLib.NAND,100,80,0,1,2);
+	gatesLib.levers[0] = new Lever(8,10,0);
+	gatesLib.levers[1] = new Lever(8,95,1);
 
-	gatesLib.lamps[0]= new gatesLib.Lamp(200,80,2);
+	gatesLib.gates[0] = new Gate(Gate.NAND,100,80,0,1,2);
+
+	gatesLib.lamps[0]= new Lamp(200,80,2);
 
 	gatesLib.mapWires();
 	gatesLib.update();
@@ -396,12 +420,17 @@ function setup(){
 	gatesLib.update();
 	gatesLib.update();
 	gatesLib.update();
-	gatesLib.drawFrame();
+	gatesLib.drawFrame(ctx);
 }
 
 setup();
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"adder":[function(require,module,exports){
-var gatesLib = require('./lib/gates')
+},{"./gates/gate":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/gate.js","./gates/index":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/index.js","./gates/lamp":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lamp.js","./gates/lever":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lever.js","./gates/wire":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/wire.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"adder":[function(require,module,exports){
+var gatesLib = require('./gates/index')
+  , Gate = require('./gates/gate')
+  , Wire = require('./gates/wire')
+  , Lever = require('./gates/lever')
+  , Lamp = require('./gates/lamp')
+  , Join = require('./gates/join')
   , common = require('./util/common-setup')
   , ctx = common.getContext();
 
@@ -416,26 +445,27 @@ window.drawComments = function(){
 }
 
 function setup(){
-	for(i=0;i<12;i++)
-		gatesLib.wires[i] = new gatesLib.Wire();
+	for(i=0;i<12;i++) {
+		gatesLib.wires[i] = new Wire();
+	}
 
-	gatesLib.levers[0] = new gatesLib.Lever(8,40,0);
-	gatesLib.levers[1] = new gatesLib.Lever(8,110,1);
-	gatesLib.levers[2] = new gatesLib.Lever(220,8,5);
+	gatesLib.levers[0] = new Lever(8,40,0);
+	gatesLib.levers[1] = new Lever(8,110,1);
+	gatesLib.levers[2] = new Lever(220,8,5);
 
-	gatesLib.gates[0] = new gatesLib.Gate(gatesLib.XOR,120,100,0,1,4);
-	gatesLib.gates[1] = new gatesLib.Gate(gatesLib.XOR,280,115,4,7,8);
-	gatesLib.gates[2] = new gatesLib.Gate(gatesLib.AND,80,200,3,2,9);
-	gatesLib.gates[3] = new gatesLib.Gate(gatesLib.AND,220,200,6,5,10);
-	gatesLib.gates[4] = new gatesLib.Gate(gatesLib.OR,150,350,9,10,11);
+	gatesLib.gates[0] = new Gate(Gate.XOR,120,100,0,1,4);
+	gatesLib.gates[1] = new Gate(Gate.XOR,280,115,4,7,8);
+	gatesLib.gates[2] = new Gate(Gate.AND,80,200,3,2,9);
+	gatesLib.gates[3] = new Gate(Gate.AND,220,200,6,5,10);
+	gatesLib.gates[4] = new Gate(Gate.OR,150,350,9,10,11);
 
-	gatesLib.lamps[0]= new gatesLib.Lamp(380,115,8);
-	gatesLib.lamps[1]= new gatesLib.Lamp(140,450,11);
+	gatesLib.lamps[0]= new Lamp(380,115,8);
+	gatesLib.lamps[1]= new Lamp(140,450,11);
 
-	gatesLib.joins[0]= new gatesLib.Join(95,80,0,2);
-	gatesLib.joins[1]= new gatesLib.Join(65,130,1,3);
-	gatesLib.joins[2]= new gatesLib.Join(235,130,5,7);
-	gatesLib.joins[3]= new gatesLib.Join(205,100,4,6);
+	gatesLib.joins[0]= new Join(95,80,0,2);
+	gatesLib.joins[1]= new Join(65,130,1,3);
+	gatesLib.joins[2]= new Join(235,130,5,7);
+	gatesLib.joins[3]= new Join(205,100,4,6);
 
 	gatesLib.mapWires();
 	gatesLib.update();
@@ -443,12 +473,12 @@ function setup(){
 	gatesLib.update();
 	gatesLib.update();
 	gatesLib.update();
-	gatesLib.drawFrame();
+	gatesLib.drawFrame(ctx);
 }
 setup();
 
 
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"binary":[function(require,module,exports){
+},{"./gates/gate":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/gate.js","./gates/index":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/index.js","./gates/join":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/join.js","./gates/lamp":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lamp.js","./gates/lever":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lever.js","./gates/wire":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/wire.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"binary":[function(require,module,exports){
 var c = document.getElementById("binaryInc");
 c.onselectstart = function(){return false;}
 var ctx = c.getContext("2d");
@@ -751,31 +781,37 @@ etfs[5] = new Etf(105,210,memory[i]);
 update();
 
 },{}],"memory":[function(require,module,exports){
-var gatesLib = require('./lib/gates')
+var gatesLib = require('./gates/index')
+  , Gate = require('./gates/gate')
+  , Wire = require('./gates/wire')
+  , Lever = require('./gates/lever')
+  , Lamp = require('./gates/lamp')
+  , Join = require('./gates/join')
   , common = require('./util/common-setup')
   , ctx = common.getContext();
 
 function setup(){
 	for(i=0;i<=12;i++) {
-		gatesLib.wires[i] = new gatesLib.Wire();
+		gatesLib.wires[i] = new Wire();
 	}
-	gatesLib.joins[0] = new gatesLib.Join(55,175,1,2);
-	gatesLib.joins[1] = new gatesLib.Join(100,145,4,5);
-	gatesLib.joins[2] = new gatesLib.Join(173,50,3,4);
-	gatesLib.joins[3] = new gatesLib.Join(210,80,9,8);
-	gatesLib.joins[4] = new gatesLib.Join(210,130,10,7);
-	gatesLib.joins[5] = new gatesLib.Join(305,65,11,10);
-	gatesLib.joins[6] = new gatesLib.Join(305,145,12,9);
 
-	gatesLib.gates[0] = new gatesLib.Gate(gatesLib.NAND,120,50,0,2,3);
-	gatesLib.gates[1] = new gatesLib.Gate(gatesLib.NAND,120,160,5,1,6);
-	gatesLib.gates[2] = new gatesLib.Gate(gatesLib.NAND,240,65,3,8,11);
-	gatesLib.gates[3] = new gatesLib.Gate(gatesLib.NAND,240,145,7,6,12);
+	gatesLib.joins[0] = new Join(55,175,1,2);
+	gatesLib.joins[1] = new Join(100,145,4,5);
+	gatesLib.joins[2] = new Join(173,50,3,4);
+	gatesLib.joins[3] = new Join(210,80,9,8);
+	gatesLib.joins[4] = new Join(210,130,10,7);
+	gatesLib.joins[5] = new Join(305,65,11,10);
+	gatesLib.joins[6] = new Join(305,145,12,9);
 
-	gatesLib.levers[0] = new gatesLib.Lever(8,5,0);
-	gatesLib.levers[1] = new gatesLib.Lever(8,145,1);
+	gatesLib.gates[0] = new Gate(Gate.NAND,120,50,0,2,3);
+	gatesLib.gates[1] = new Gate(Gate.NAND,120,160,5,1,6);
+	gatesLib.gates[2] = new Gate(Gate.NAND,240,65,3,8,11);
+	gatesLib.gates[3] = new Gate(Gate.NAND,240,145,7,6,12);
 
-	gatesLib.lamps[0] = new gatesLib.Lamp(345,65,11);
+	gatesLib.levers[0] = new Lever(8,5,0);
+	gatesLib.levers[1] = new Lever(8,145,1);
+
+	gatesLib.lamps[0] = new Lamp(345,65,11);
 
 	gatesLib.wires[1].value = true;
 	gatesLib.mapWires();
@@ -784,12 +820,17 @@ function setup(){
 	gatesLib.update();
 	gatesLib.update();
 	gatesLib.update();
-	gatesLib.drawFrame();
+	gatesLib.drawFrame(ctx);
 }
 setup();
 
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"more-gates":[function(require,module,exports){
-var gatesLib = require('./lib/gates')
+},{"./gates/gate":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/gate.js","./gates/index":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/index.js","./gates/join":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/join.js","./gates/lamp":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lamp.js","./gates/lever":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lever.js","./gates/wire":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/wire.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}],"more-gates":[function(require,module,exports){
+var gatesLib = require('./gates/index')
+  , Gate = require('./gates/gate')
+  , Wire = require('./gates/wire')
+  , Lever = require('./gates/lever')
+  , Lamp = require('./gates/lamp')
+  , Join = require('./gates/join')
   , common = require('./util/common-setup')
   , ctx = common.getContext();
 
@@ -834,38 +875,38 @@ window.drawComments = function(){
 
 function setup(){
 	for(i=0;i<=22;i++) {
-		gatesLib.wires[i] = new gatesLib.Wire();
+		gatesLib.wires[i] = new Wire();
 	}
 
-	gatesLib.levers[0] = new gatesLib.Lever(8,8,0);
-	gatesLib.levers[1] = new gatesLib.Lever(8,70,1);
-	gatesLib.levers[2] = new gatesLib.Lever(8,165,5);
-	gatesLib.levers[3] = new gatesLib.Lever(8,235,6);
-	gatesLib.levers[4] = new gatesLib.Lever(8,335,14);
-	gatesLib.levers[5] = new gatesLib.Lever(8,465,15);
+	gatesLib.levers[0] = new Lever(8,8,0);
+	gatesLib.levers[1] = new Lever(8,70,1);
+	gatesLib.levers[2] = new Lever(8,165,5);
+	gatesLib.levers[3] = new Lever(8,235,6);
+	gatesLib.levers[4] = new Lever(8,335,14);
+	gatesLib.levers[5] = new Lever(8,465,15);
 
-	gatesLib.lamps[0] = new gatesLib.Lamp(250,70,4);
-	gatesLib.lamps[1] = new gatesLib.Lamp(300,230,13);
-	gatesLib.lamps[2] = new gatesLib.Lamp(400,430,22);
+	gatesLib.lamps[0] = new Lamp(250,70,4);
+	gatesLib.lamps[1] = new Lamp(300,230,13);
+	gatesLib.lamps[2] = new Lamp(400,430,22);
 
-	gatesLib.joins[0] = new gatesLib.Join(136,69,2,3);
-	gatesLib.joins[1] = new gatesLib.Join(120,195,7,8);
-	gatesLib.joins[2] = new gatesLib.Join(120,265,9,10);
-	gatesLib.joins[3] = new gatesLib.Join(145,365,14,16);
-	gatesLib.joins[4] = new gatesLib.Join(145,495,15,17);
-	gatesLib.joins[5] = new gatesLib.Join(215,430,18,19);
-	gatesLib.joins[6] = new gatesLib.Join(120,195,5,7);
-	gatesLib.joins[7] = new gatesLib.Join(120,265,6,9);
+	gatesLib.joins[0] = new Join(136,69,2,3);
+	gatesLib.joins[1] = new Join(120,195,7,8);
+	gatesLib.joins[2] = new Join(120,265,9,10);
+	gatesLib.joins[3] = new Join(145,365,14,16);
+	gatesLib.joins[4] = new Join(145,495,15,17);
+	gatesLib.joins[5] = new Join(215,430,18,19);
+	gatesLib.joins[6] = new Join(120,195,5,7);
+	gatesLib.joins[7] = new Join(120,265,6,9);
 
-	gatesLib.gates[0] = new gatesLib.Gate(gatesLib.tNAND,90,70,0,1,2);
-	gatesLib.gates[1] = new gatesLib.Gate(gatesLib.tNAND,160,70,2,3,4);
-	gatesLib.gates[2] = new gatesLib.Gate(gatesLib.tNAND,140,195,7,8,11);
-	gatesLib.gates[3] = new gatesLib.Gate(gatesLib.tNAND,140,265,9,10,12);
-	gatesLib.gates[4] = new gatesLib.Gate(gatesLib.tNAND,210,230,11,12,13);
-	gatesLib.gates[5] = new gatesLib.Gate(gatesLib.tNAND,170,430,16,17,18);
-	gatesLib.gates[6] = new gatesLib.Gate(gatesLib.tNAND,240,380,14,18,20);
-	gatesLib.gates[7] = new gatesLib.Gate(gatesLib.tNAND,240,480,19,15,21);
-	gatesLib.gates[8] = new gatesLib.Gate(gatesLib.tNAND,310,430,20,21,22);
+	gatesLib.gates[0] = new Gate(Gate.tNAND,90,70,0,1,2);
+	gatesLib.gates[1] = new Gate(Gate.tNAND,160,70,2,3,4);
+	gatesLib.gates[2] = new Gate(Gate.tNAND,140,195,7,8,11);
+	gatesLib.gates[3] = new Gate(Gate.tNAND,140,265,9,10,12);
+	gatesLib.gates[4] = new Gate(Gate.tNAND,210,230,11,12,13);
+	gatesLib.gates[5] = new Gate(Gate.tNAND,170,430,16,17,18);
+	gatesLib.gates[6] = new Gate(Gate.tNAND,240,380,14,18,20);
+	gatesLib.gates[7] = new Gate(Gate.tNAND,240,480,19,15,21);
+	gatesLib.gates[8] = new Gate(Gate.tNAND,310,430,20,21,22);
 
 	gatesLib.mapWires();
 	gatesLib.update();
@@ -873,8 +914,8 @@ function setup(){
 	gatesLib.update();
 	gatesLib.update();
 	gatesLib.update();
-	gatesLib.drawFrame();
+	gatesLib.drawFrame(ctx);
 }
 setup();
 
-},{"./lib/gates":"/Users/administrator/Development/_study/spikes/simplecpu/assets/lib/gates.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}]},{},[]);
+},{"./gates/gate":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/gate.js","./gates/index":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/index.js","./gates/join":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/join.js","./gates/lamp":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lamp.js","./gates/lever":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/lever.js","./gates/wire":"/Users/administrator/Development/_study/spikes/simplecpu/assets/gates/wire.js","./util/common-setup":"/Users/administrator/Development/_study/spikes/simplecpu/assets/util/common-setup.js"}]},{},[]);
