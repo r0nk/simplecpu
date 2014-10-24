@@ -10,7 +10,8 @@ gulp.task('build', function() {
   		// leave debug out until we are uglifying too
   		// debug: true
   	})
-	.require('./assets/NAND.js', {expose: 'NAND'});
+	.require('./assets/NAND.js', {expose: 'NAND'})
+	.require('./assets/adder.js', {expose: 'adder'});
 
 	if (global.watchingChanges) {
 		bundler = watchify(bundler);
