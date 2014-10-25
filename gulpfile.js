@@ -1,15 +1,14 @@
 var gulp = require('gulp')
   , browserify = require('browserify')
   , watchify = require('watchify')
-	, source = require('vinyl-source-stream');
+  , uglify = require('gulp-uglify')
+	, source = require('vinyl-source-stream')
+	, buffer = require('vinyl-buffer');
 
 gulp.task('build', function() {
-	var bundler = browserify({
-  		// for watchify
-  		cache: {}, packageCache: {}, fullPaths: true,
-  		// leave debug out until we are uglifying too
-  		// debug: true
-  	})
+	var options = global.watchingChanges ? {cache: {}, packageCache: {}, fullPaths: true} : {};
+
+	var bundler = browserify(options)
 	.require('./assets/NAND.js', {expose: 'NAND'})
 	.require('./assets/adder.js', {expose: 'adder'})
 	.require('./assets/memory.js', {expose: 'memory'})
@@ -29,11 +28,13 @@ gulp.task('build', function() {
 		bundler.bundle()
 		.on('error', function(err) { console.log(err); })
 		.pipe(source('app.js'))
+		.pipe(buffer())
+		.pipe(uglify())
 		.pipe(gulp.dest('scripts'));
 	}
 });
 
-gulp.task('watch', [ 'watch:set', 'build' ]);
+gulp.task('build:dev', [ 'watch:set', 'build' ]);
 
 gulp.task('watch:set', function() {
 	global.watchingChanges = true;
