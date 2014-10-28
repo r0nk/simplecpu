@@ -29,7 +29,7 @@ function drawComments(){
 	ctx.lineTo(0,0);
 	ctx.arc(80,70,70,0-(Math.PI/2),Math.PI/2);
 	ctx.lineTo(-70,140);
-	ctx.moveTo(0,00);
+	ctx.moveTo(0,0);
 	ctx.arc(-70,70,70,0-(Math.PI/2),Math.PI/2);
 	ctx.stroke();
 	ctx.setTransform(1,0,0,1,0,0);
