@@ -55,6 +55,6 @@
 		new Join(205, 100, wires[4], wires[6])
 		];
 
-		return simpleCpu.composite(gates, joins, lamps, levers, wires);
+		return simpleCpu.composite(gates, joins, lamps, levers, wires, drawComments);
 	}
 })();
