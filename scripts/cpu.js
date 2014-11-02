@@ -1,6 +1,6 @@
-var etfs = new Array();
 var memory = new Array();//instruction pointer = 0;
-var offset = 1;//memory selector location offset
+var offset = 1;//memory scroll location offset
+var mouseDown = false;
 
 var c = document.getElementById("cpu");
 c.onselectstart = function(){return false;}
@@ -8,11 +8,12 @@ var ctx = c.getContext("2d");
 ctx.font = "16px Arial";
 setInterval(tick,1000);
 
-c.addEventListener('click',function(e){
-	ctx.font = "24px Arial";
+c.addEventListener('mousedown',function(e){
 	x=e.pageX-ctx.canvas.offsetLeft;
 	y=e.pageY-ctx.canvas.offsetTop;
-	if((x>105&&x<(105+ctx.measureText("00000000").width))&&(y>62&&y<270)){
+
+	ctx.font = "24px Arial";
+	if((x>105&&x<(105+ctx.measureText("00000000").width))&&(y>62&&y<300)){
 		if(!(cpu.lever.value))
 			modifyMemory(x-105,y-62);
 	}
@@ -24,29 +25,50 @@ c.addEventListener('click',function(e){
 	if((x>435&&x<(435+ctx.measureText("reset  ").width))&&(y>150&&y<175)){
 		memory[0] = 1;
 	}
+
+	//scroll bar
+	if((x>225&&x<235)&&(y>40&&y<280)){
+		mouseDown = true;
+		offset = y-40;
+		if(offset>248)
+			offset=248;
+		if(offset<0)
+			offset=1;
+	}
 	update();
 },false);
-//firefox band-aid
-var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
-
-c.addEventListener(mousewheelevt,function(e){
-	if(e.wheelDelta){
-		if(e.wheelDelta>0){
-			if(offset>1)
-				offset--;
-		}else{
-			if(offset<250)
-				offset++;
+c.addEventListener('mouseup',function(e){
+	mouseDown = false;
+},false);
+c.addEventListener('mousemove',function(e){
+	if(mouseDown){
+		y=e.pageY-ctx.canvas.offsetTop;
+		if(y>40&&y<300){
+			offset = y-40;
+			if(offset>248)
+				offset=248;
+			if(offset<0)
+				offset=1;
+			update();
 		}
 	}
-	if(e.detail){
-		if(e.detail<0){
-			if(offset>1)
-				offset--;
-		}else{
-			if(offset<250)
-				offset++;
-		}
+		
+},false);
+
+//firefox band-aid
+var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+c.addEventListener(mousewheelevt,function(e){
+	//used to stop page scrolling while in canvas
+	e.preventDefault();
+	e.stopPropagation();
+
+	s = e.wheelDelta ? e.wheelDelta : -e.detail;
+	if(s>0){
+		if(offset>1)
+			offset--;
+	}else{
+		if(offset<248)
+			offset++;
 	}
 	update();
 	return false;
@@ -78,6 +100,7 @@ function Etf(x,y,value){
 	this.value = value;
 }
 //start of action functions
+
 function modifyMemory(x,y){
 	row = Math.floor(y/30);
 	value = 128 >> Math.floor((x/ctx.measureText("0").width));
@@ -103,7 +126,7 @@ function tick(){
 		case 1:
 			memory[memory[ip+2]] += memory[memory[ip+1]];
 			if(memory[memory[ip+2]]>255)
-				memory[memory[ip+2]]=0;
+				memory[memory[ip+2]]-=255;
 			break;
 		case 2:
 			memory[memory[ip+2]] -= memory[memory[ip+1]];
@@ -116,13 +139,13 @@ function tick(){
 		}
 		memory[0]+=3;//instruction pointer++
 		if(memory[0]>255)
-			memory[0]=memory[0]-255;
+			memory[0]-=255;
 	}
 	update();
 }
 
 function update(){
-	for(k=0;k<6;k++){
+	for(k=0;k<8;k++){
 		etfs[k].value = memory[offset+k];
 		if((offset+k)==memory[0])
 			etfs[k].type = 2;
@@ -130,11 +153,6 @@ function update(){
 			etfs[k].type = 0;
 			
 	}
-	etfs[1].value = memory[offset+1];
-	etfs[2].value = memory[offset+2];
-	etfs[3].value = memory[offset+3];
-	etfs[4].value = memory[offset+4];
-	etfs[5].value = memory[offset+5];
 	cpu.etf.value = memory[0];
 	drawFrame();
 }
@@ -164,6 +182,8 @@ function drawAddresses(off){
 	ctx.fillText(toBin(off+3),22,170);
 	ctx.fillText(toBin(off+4),22,200);
 	ctx.fillText(toBin(off+5),22,230);
+	ctx.fillText(toBin(off+6),22,260);
+	ctx.fillText(toBin(off+7),22,290);
 }	
 function drawLever(l){
 	ctx.beginPath();
@@ -199,36 +219,46 @@ function drawCpu(c){
 }
 function drawMemory(){
 	ctx.fillStyle = "#DDDDDD";
-	ctx.fillRect(20,30,220,220);
+	ctx.fillRect(15,30,225,280);
 	ctx.strokeStyle = "#999999";
-	ctx.strokeRect(20,30,220,220);
+	ctx.strokeRect(15,30,225,280);
 	for(i=0;i<etfs.length;i++){
 		drawEtf(etfs[i]);
 	}
 	drawAddresses(offset);
 	ctx.font = "16px Arial";
 	ctx.fillStyle = "#999999";
-	ctx.fillText("Memory",20,27);	
+	ctx.fillText("Memory",15,27);	
 	ctx.font = "14px Arial";
 	ctx.fillText("address:",23,55);	
 	ctx.fillText("value:",105,55);	
+	//scroll bar
+	ctx.fillStyle = "#AAAAAA";
+	ctx.fillRect(225,40+offset,10,20);
+	ctx.fillRect(229,45,2,260);
+}
+function drawResetButton(){
+	ctx.font = "16px Arial";
+	ctx.fillStyle = "#AAAAFF";
+	ctx.fillRect(435,155,ctx.measureText("Reset   ").width,20);
+	ctx.fillStyle = "#000000";
+	ctx.fillText("Reset",440,170);	
+}
+function drawBus(){
+	ctx.font = "16px Arial";
+	ctx.fillStyle = "#999999";
+	ctx.fillText("Bus",243,118);	
+	ctx.fillStyle = "#DDDDDD";
+	ctx.fillRect(240,120,90,10);
 }
 function drawFrame(){
 	ctx.setTransform(1,0,0,1,0,0);	
 	ctx.clearRect(0,0,1000,1000);
 	//draws everything onto the canvas 
+	drawBus();
 	drawCpu(cpu);
 	drawMemory();
-	ctx.fillStyle = "#999999";
-	ctx.font = "16px Arial";
-	ctx.fillText("Bus",243,118);	
-	ctx.fillStyle = "#DDDDDD";
-	ctx.fillRect(240,120,90,10);
-	//reset button
-	ctx.fillStyle = "#AAAAFF";
-	ctx.fillRect(435,155,ctx.measureText("Reset   ").width,20);
-	ctx.fillStyle = "#000000";
-	ctx.fillText("Reset",440,170);	
+	drawResetButton();
 }
 for(i=0;i<256;i++)
 	memory[i] = 0;
@@ -237,10 +267,14 @@ memory[0]=1;
 
 cpu = new Cpu(330,30);
 
-etfs[0] = new Etf(105,60,memory[i]);
-etfs[1] = new Etf(105,90,memory[i]);
-etfs[2] = new Etf(105,120,memory[i]);
-etfs[3] = new Etf(105,150,memory[i]);
-etfs[4] = new Etf(105,180,memory[i]);
-etfs[5] = new Etf(105,210,memory[i]);
+var etfs = [
+	new Etf(105, 60, memory[i]),
+	new Etf(105, 90, memory[i]),
+	new Etf(105, 120, memory[i]),
+	new Etf(105, 150, memory[i]),
+	new Etf(105, 180, memory[i]),
+	new Etf(105, 210, memory[i]),
+	new Etf(105, 240, memory[i]),
+	new Etf(105, 270, memory[i]),
+];
 update();
