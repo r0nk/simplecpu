@@ -62,44 +62,44 @@ function buildComposite(){
 	var wires = Wire.list(23);
 
 	var levers = [
-		new Lever(8,8,0),
-		new Lever(8,70,1),
-		new Lever(8,165,5),
-		new Lever(8,235,6),
-		new Lever(8,335,14),
-		new Lever(8,465,15)
+		new Lever(8, 8, wires[0]),
+		new Lever(8, 70, wires[1]),
+		new Lever(8, 165, wires[5]),
+		new Lever(8, 235, wires[6]),
+		new Lever(8, 335, wires[14]),
+		new Lever(8, 465, wires[15])
 	];
 
 	var lamps = [
-		new Lamp(250,70,4),
-		new Lamp(300,230,13),
-		new Lamp(400,430,22)
+		new Lamp(250, 70, wires[4]),
+		new Lamp(300, 230, wires[13]),
+		new Lamp(400, 430, wires[22])
 	];
 
 	var joins = [
-		new Join(136,69,2,3),
-		new Join(120,195,7,8),
-		new Join(120,265,9,10),
-		new Join(145,365,14,16),
-		new Join(145,495,15,17),
-		new Join(215,430,18,19),
-		new Join(120,195,5,7),
-		new Join(120,265,6,9)
+		new Join(136, 69, wires[2], wires[3]),
+		new Join(120, 195, wires[7], wires[8]),
+		new Join(120, 265, wires[9], wires[10]),
+		new Join(145, 365, wires[14], wires[16]),
+		new Join(145, 495, wires[15], wires[17]),
+		new Join(215, 430, wires[18], wires[19]),
+		new Join(120, 195, wires[5], wires[7]),
+		new Join(120, 265, wires[6], wires[9])
 	];
 
 	var gates = [
-		new Gate(Gate.tNAND,90,70,0,1,2),
-		new Gate(Gate.tNAND,160,70,2,3,4),
-		new Gate(Gate.tNAND,140,195,7,8,11),
-		new Gate(Gate.tNAND,140,265,9,10,12),
-		new Gate(Gate.tNAND,210,230,11,12,13),
-		new Gate(Gate.tNAND,170,430,16,17,18),
-		new Gate(Gate.tNAND,240,380,14,18,20),
-		new Gate(Gate.tNAND,240,480,19,15,21),
-		new Gate(Gate.tNAND,310,430,20,21,22)
+		new Gate(Gate.tNAND, 90, 70, wires[0], wires[1], wires[2]),
+		new Gate(Gate.tNAND, 160, 70, wires[2], wires[3], wires[4]),
+		new Gate(Gate.tNAND, 140, 195, wires[7], wires[8], wires[11]),
+		new Gate(Gate.tNAND, 140, 265, wires[9], wires[10], wires[12]),
+		new Gate(Gate.tNAND, 210, 230, wires[11], wires[12], wires[13]),
+		new Gate(Gate.tNAND, 170, 430, wires[16], wires[17], wires[18]),
+		new Gate(Gate.tNAND, 240, 380, wires[14], wires[18], wires[20]),
+		new Gate(Gate.tNAND, 240, 480, wires[19], wires[15], wires[21]),
+		new Gate(Gate.tNAND, 310, 430, wires[20], wires[21], wires[22])
 	];
 
-	return composite(gates, wires, joins, lamps, levers);
+	return composite(gates, joins, lamps, levers, wires);
 }
 
 start();

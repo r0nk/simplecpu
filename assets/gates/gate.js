@@ -6,17 +6,16 @@ Gate.OR    = 2;
 Gate.XOR   = 3;
 Gate.tNAND = 4;
 
-function Gate(kind,x,y,a,b,out){
+function Gate(kind,x,y,wireIn1,wireIn2,wireOut){
 	this.kind = kind;
 	this.x = x;
 	this.y = y;
 	this.r = 0;
 	this.s = 1;
-	//a,b, and out are all input and output wires; they are the index 
-	//location of the wire.
-	this.a = a;
-	this.b = b;
-	this.out = out;
+	
+	this.wireIn1 = wireIn1;
+	this.wireIn2 = wireIn2;
+	this.wireOut = wireOut;
 }
 
 Gate.draw = function(gate, ctx){

@@ -33,32 +33,32 @@ function buildComposite() {
 	var wires = Wire.list(12);
 
 	var levers = [
-		new Lever(8,40,0),
-	  new Lever(8,110,1),
-	  new Lever(220,8,5)
+		new Lever(8, 40, wires[0]),
+	  new Lever(8, 110, wires[1]),
+	  new Lever(220, 8, wires[5])
 	];
 
 	var gates = [
-		new Gate(Gate.XOR,120,100,0,1,4),
-		new Gate(Gate.XOR,280,115,4,7,8),
-		new Gate(Gate.AND,80,200,3,2,9),
-		new Gate(Gate.AND,220,200,6,5,10),
-		new Gate(Gate.OR,150,350,9,10,11)
+		new Gate(Gate.XOR, 120, 100, wires[0], wires[1], wires[4]),
+		new Gate(Gate.XOR, 280, 115, wires[4], wires[7], wires[8]),
+		new Gate(Gate.AND, 80, 200, wires[3], wires[2], wires[9]),
+		new Gate(Gate.AND, 220, 200, wires[6], wires[5], wires[10]),
+		new Gate(Gate.OR, 150, 350, wires[9], wires[10], wires[11])
 	];
 
 	var lamps = [
-		new Lamp(380,115,8),
-		new Lamp(140,450,11)
+		new Lamp(380, 115, wires[8]),
+		new Lamp(140, 450, wires[11])
 	];
 
 	var joins = [
-		new Join(95,80,0,2),
-		new Join(65,130,1,3),
-		new Join(235,130,5,7),
-		new Join(205,100,4,6)
+		new Join(95, 80, wires[0], wires[2]),
+		new Join(65, 130, wires[1], wires[3]),
+		new Join(235, 130, wires[5], wires[7]),
+		new Join(205, 100, wires[4], wires[6])
 	];
 
-	return composite(gates, wires, joins, lamps, levers);
+	return composite(gates, joins, lamps, levers, wires);
 }
 
 start();

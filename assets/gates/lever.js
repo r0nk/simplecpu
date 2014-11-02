@@ -5,16 +5,16 @@ function Lever(x, y, wire){
 	this.y = y;	
 	this.r = 0;
 	this.s = 1;
-	this.wire = wire;//wire index; not actually a wire
+	this.wire = wire;
 }
 
-Lever.draw = function(wires, lever, ctx){
+Lever.draw = function(lever, ctx){
 	ctx.beginPath();
 	ctx.setTransform(lever.s, 0, 0, lever.s, lever.x, lever.y);	
 	ctx.rotate(lever.r*(Math.PI/180));
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 0, 30, 60);
-	if(wires[lever.wire].value){
+	if (lever.wire.value){
 		ctx.fillStyle = "#AAFFAA";
 		ctx.fillRect(0, 30, 30, 30);
 		ctx.fillStyle = "#000000";

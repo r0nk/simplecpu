@@ -1,17 +1,17 @@
 module.exports = Lamp;
 
-function Lamp(x,y,wireIdx){
+function Lamp(x,y,wire){
 	this.x = x;	
 	this.y = y;	
 	this.r = 0;
 	this.s = 1;
-	this.wireIdx = wireIdx; //wire index; not actually a wire
+	this.wire = wire;
 }
 
-Lamp.draw = function(wires, lamp, ctx){
+Lamp.draw = function(lamp, ctx){
 	ctx.beginPath();
 	ctx.setTransform(lamp.s, 0, 0, lamp.s, lamp.x, lamp.y - 10);	
-	if(wires[lamp.wireIdx].value){
+	if(lamp.wire.value){
 		grd = ctx.createRadialGradient(10, 10, 0, 10, 10, 20);
 		grd.addColorStop(0, "rgba(100, 255, 100, 1.0)");
 		grd.addColorStop(1, "rgba(100, 255, 100, 0.0)");

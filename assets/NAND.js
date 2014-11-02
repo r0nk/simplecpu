@@ -22,15 +22,15 @@ function buildComposite(){
 	var wires = Wire.list(3);
 
 	var levers = [
-		new Lever(8,10,0),
-		new Lever(8,95,1)
+		new Lever(8, 10, wires[0]),
+		new Lever(8, 95, wires[1])
 	];
 
-	var gates = [ new Gate(Gate.NAND,100,80,0,1,2) ];
+	var gates = [ new Gate(Gate.NAND, 100, 80, wires[0], wires[1], wires[2]) ];
 
-	var lamps = [ new Lamp(200,80,2) ];
+	var lamps = [ new Lamp(200, 80, wires[2]) ];
 
-	return composite(gates, wires, [], lamps, levers);
+	return composite(gates, [], lamps, levers, wires);
 }
 
 start();

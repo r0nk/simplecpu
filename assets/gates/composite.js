@@ -6,7 +6,7 @@ var Gate = require('./gate')
 
 window.drawComments = function(ctx) {}
 
-module.exports = function(gates, wires, joins, lamps, levers){
+module.exports = function(gates, joins, lamps, levers, wires){
 	//reads through array of all elements, and maps locations to the wire
 	//array
 	//only called once after the arrays of elements are mapped
@@ -14,62 +14,81 @@ module.exports = function(gates, wires, joins, lamps, levers){
 		switch(gate.kind){
 		case Gate.tNAND:
 		case Gate.NAND:
-			wires[gate.a].connections.push({x:gate.x,y:gate.y - 15});
-			wires[gate.b].connections.push({x:gate.x,y:gate.y + 15}); 
-			wires[gate.out].connections.push({x:gate.x + 43,y:gate.y});
+			gate.wireIn1.connections.push({x:gate.x,y:gate.y - 15});
+			gate.wireIn2.connections.push({x:gate.x,y:gate.y + 15}); 
+			gate.wireOut.connections.push({x:gate.x + 43,y:gate.y});
 			break;
 		case Gate.AND://AND
-			wires[gate.a].connections.push({x:gate.x-15,y:gate.y});
-			wires[gate.b].connections.push({x:gate.x+15,y:gate.y}); 
-			wires[gate.out].connections.push({x:gate.x,y:gate.y+60});
+			gate.wireIn1.connections.push({x:gate.x-15,y:gate.y});
+			gate.wireIn2.connections.push({x:gate.x+15,y:gate.y}); 
+			gate.wireOut.connections.push({x:gate.x,y:gate.y+60});
 			break;
 		case Gate.OR://OR
-			wires[gate.a].connections.push({x:gate.x-15,y:gate.y + 25});
-			wires[gate.b].connections.push({x:gate.x+15,y:gate.y + 25}); 
-			wires[gate.out].connections.push({x:gate.x,y:gate.y+60});
+			gate.wireIn1.connections.push({x:gate.x-15,y:gate.y + 25});
+			gate.wireIn2.connections.push({x:gate.x+15,y:gate.y + 25}); 
+			gate.wireOut.connections.push({x:gate.x,y:gate.y+60});
 			break;
 		case Gate.XOR://XOR
-			wires[gate.a].connections.push({x:gate.x + 10,y:gate.y - 15});
-			wires[gate.b].connections.push({x:gate.x + 10,y:gate.y + 15}); 
-			wires[gate.out].connections.push({x:gate.x + 60,y:gate.y});
+			gate.wireIn1.connections.push({x:gate.x + 10,y:gate.y - 15});
+			gate.wireIn2.connections.push({x:gate.x + 10,y:gate.y + 15}); 
+			gate.wireOut.connections.push({x:gate.x + 60,y:gate.y});
 			break;
 		}
 	});
 	
 	levers.forEach(function(lever) {
-		wires[lever.wire].connections.push({x:lever.x+15,y:lever.y+30});
+		lever.wire.connections.push({x:lever.x+15,y:lever.y+30});
 	});
 	
 	lamps.forEach(function(lamp) {
-		wires[lamp.wireIdx].connections.push({x:lamp.x+10,y:lamp.y});
+		lamp.wire.connections.push({x:lamp.x+10,y:lamp.y});
 	});
 
 	joins.forEach(function(join) {
-		wires[join.wire1].connections.push({x:join.x,y:join.y});
-		wires[join.wire2].connections.push({x:join.x,y:join.y});
+		join.wire1.connections.push({x:join.x, y:join.y});
+		join.wire2.connections.push({x:join.x, y:join.y});
 	});
 
 	return {
-		checkAt: checkAt.bind(undefined, wires, levers),
-		update: update.bind(undefined, gates, wires, joins),
+		checkAt: checkAt.bind(undefined, levers),
+		update: update.bind(undefined, gates, joins),
 		render: drawFrame.bind(undefined, gates, wires, joins, lamps, levers)
 	};
 }
 
-function checkAt(wires, levers, x, y){
+function checkAt(levers, x, y){
 	levers.forEach(function(lever) {
 		if(x > lever.x && x < (lever.x + 30)){
 		 if(y > lever.y && y < (lever.y + 60)){
-		  wires[lever.wire].value = !wires[lever.wire].value;
+		  lever.wire.value = !lever.wire.value;
 		 }
 		}
 	});
 }
 
-function update(gates, wires, joins){
-	gateStep(gates, wires);
-	//joinStep has to be last
-	joinStep(wires, joins);
+function update(gates, joins){
+	//calculate gate logic
+	gates.forEach(function(gate) {
+		switch(gate.kind){
+		case Gate.tNAND:
+		case Gate.NAND:
+			gate.wireOut.value = !(gate.wireIn1.value && gate.wireIn2.value);
+			break;
+		case Gate.AND:
+			gate.wireOut.value = (gate.wireIn1.value && gate.wireIn2.value);
+			break;
+		case Gate.OR:
+			gate.wireOut.value = (gate.wireIn1.value || gate.wireIn2.value);
+			break;
+		case Gate.XOR:
+			gate.wireOut.value = (gate.wireIn1.value != gate.wireIn2.value);
+			break;
+		}
+	});
+
+	joins.forEach(function(join) {
+		join.wire2.value = join.wire1.value 
+	});
 }
 
 function drawFrame(gates, wires, joins, lamps, levers, ctx){
@@ -81,11 +100,11 @@ function drawFrame(gates, wires, joins, lamps, levers, ctx){
 	});
 
 	lamps.forEach(function(lamp) {
-		Lamp.draw(wires, lamp, ctx);
+		Lamp.draw(lamp, ctx);
 	});
 
 	levers.forEach(function(lever) {
-		Lever.draw(wires, lever, ctx);
+		Lever.draw(lever, ctx);
 	});
 
 	gates.forEach(function(gate) {
@@ -93,41 +112,8 @@ function drawFrame(gates, wires, joins, lamps, levers, ctx){
 	});
 
 	joins.forEach(function(join) {
-		Join.draw(wires, join, ctx);
+		Join.draw(join, ctx);
 	});
 
 	drawComments(ctx);
-}
-
-function gateStep(gates, wires){
-	//calculate gate logic
-	gates.forEach(function(gate) {
-		switch(gate.kind){
-		case Gate.tNAND:
-		case Gate.NAND:
-			wires[gate.out].value = 
-	 	 	 !(wires[gate.a].value && wires[gate.b].value);
-			break;
-		case Gate.AND:
-			wires[gate.out].value = 
-	 	 	 (wires[gate.a].value && wires[gate.b].value);
-			break;
-		case Gate.OR:
-			wires[gate.out].value = 
-	 	 	 (wires[gate.a].value || wires[gate.b].value);
-			break;
-		case Gate.XOR:
-			wires[gate.out].value = 
-	 	 	 (wires[gate.a].value != wires[gate.b].value);
-			break;
-		}
-	});
-}
-
-function joinStep(wires, joins){
-	joins.forEach(function(join) {
-		a = join.wire1;
-		b = join.wire2;
-		wires[b].value = wires[a].value 
-	});
 }
