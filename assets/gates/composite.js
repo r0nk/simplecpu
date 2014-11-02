@@ -14,82 +14,39 @@ module.exports = function(gates, wires, joins, lamps, levers){
 		switch(gate.kind){
 		case Gate.tNAND:
 		case Gate.NAND:
-			j = wires[gate.a].connections.length;
-			p = {x:gate.x,y:gate.y - 15};
-			wires[gate.a].connections[j] = p;
-
-			j = wires[gate.b].connections.length;
-			p = {x:gate.x,y:gate.y + 15};
-			wires[gate.b].connections[j] = p; 
-
-			j = wires[gate.out].connections.length;
-			p = {x:gate.x + 43,y:gate.y};
-			wires[gate.out].connections[j] = p;
+			wires[gate.a].connections.push({x:gate.x,y:gate.y - 15});
+			wires[gate.b].connections.push({x:gate.x,y:gate.y + 15}); 
+			wires[gate.out].connections.push({x:gate.x + 43,y:gate.y});
 			break;
 		case Gate.AND://AND
-			j = wires[gate.a].connections.length;
-			p = {x:gate.x-15,y:gate.y};
-			wires[gate.a].connections[j] = p;
-
-			j = wires[gate.b].connections.length;
-			p = {x:gate.x+15,y:gate.y};
-			wires[gate.b].connections[j] = p; 
-
-			j = wires[gate.out].connections.length;
-			p = {x:gate.x,y:gate.y+60};
-			wires[gate.out].connections[j] = p;
+			wires[gate.a].connections.push({x:gate.x-15,y:gate.y});
+			wires[gate.b].connections.push({x:gate.x+15,y:gate.y}); 
+			wires[gate.out].connections.push({x:gate.x,y:gate.y+60});
 			break;
 		case Gate.OR://OR
-			j = wires[gate.a].connections.length;
-			p = {x:gate.x-15,y:gate.y + 25};
-			wires[gate.a].connections[j] = p;
-
-			j = wires[gate.b].connections.length;
-			p = {x:gate.x+15,y:gate.y + 25};
-			wires[gate.b].connections[j] = p; 
-
-			j = wires[gate.out].connections.length;
-			p = {x:gate.x,y:gate.y+60};
-			wires[gate.out].connections[j] = p;
+			wires[gate.a].connections.push({x:gate.x-15,y:gate.y + 25});
+			wires[gate.b].connections.push({x:gate.x+15,y:gate.y + 25}); 
+			wires[gate.out].connections.push({x:gate.x,y:gate.y+60});
 			break;
 		case Gate.XOR://XOR
-			j = wires[gate.a].connections.length;
-			p = {x:gate.x + 10,y:gate.y - 15};
-			wires[gate.a].connections[j] = p;
-
-			j = wires[gate.b].connections.length;
-			p = {x:gate.x + 10,y:gate.y + 15};
-			wires[gate.b].connections[j] = p; 
-
-			j = wires[gate.out].connections.length;
-			p = {x:gate.x + 60,y:gate.y};
-			wires[gate.out].connections[j] = p;
+			wires[gate.a].connections.push({x:gate.x + 10,y:gate.y - 15});
+			wires[gate.b].connections.push({x:gate.x + 10,y:gate.y + 15}); 
+			wires[gate.out].connections.push({x:gate.x + 60,y:gate.y});
 			break;
 		}
 	});
 	
 	levers.forEach(function(lever) {
-		l = lever.wire;
-		j = wires[l].connections.length;
-		p = {x:lever.x+15,y:lever.y+30};
-		wires[l].connections[j] = p;
+		wires[lever.wire].connections.push({x:lever.x+15,y:lever.y+30});
 	});
 	
 	lamps.forEach(function(lamp) {
-		l = lamp.wireIdx;
-		j = wires[l].connections.length;
-		p = {x:lamp.x+10,y:lamp.y};
-		wires[l].connections[j] = p;
+		wires[lamp.wireIdx].connections.push({x:lamp.x+10,y:lamp.y});
 	});
 
 	joins.forEach(function(join) {
-		l = join.wire1;
-		j = wires[l].connections.length;
-		p = {x:join.x,y:join.y};
-		wires[l].connections[j] = p;
-		l = join.wire2;
-		j = wires[l].connections.length;
-		wires[l].connections[j] = p;
+		wires[join.wire1].connections.push({x:join.x,y:join.y});
+		wires[join.wire2].connections.push({x:join.x,y:join.y});
 	});
 
 	return {
