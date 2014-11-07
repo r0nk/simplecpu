@@ -10,20 +10,27 @@
  <li><a href="about.html">acerca de</a></li>
 </ul><br>
 <div class="content">
-But how does the CPU know where to get its instructions?<br>
+Pero... &iquest;C&oacute;mo sabe la CPU de d&oacute;nde sacar las
+instrucciones?<br>
 <br>
-On the CPU, there is a tiny amount of memory. It does various things, such as<br>
-hold something called the "instruction pointer". The instruction pointer <br>
-holds the location of the next instruction, and increments itself after <br>
-every instruction. So basically, the CPU reads the instruction pointer,<br>
-fetches the next instruction, does it, increments the instruction pointer<br>
-and then goes back to step one.<br>
+En la CPU hay una porci&oacute;n de memoria muy peque&ntilde;a que sirve para
+varias<br> cosas, como, por ejemplo, guardar algo llamado el "puntero de
+instrucci&oacute;n"<br> (<i>"instruction pointer", IP</i>). El IP guarda la
+ubicaci&oacute;n de la pr&oacute;xima instrucci&oacute;n a<br> ejecutar, y se
+incrementa despu&eacute;s de cada instrucci&oacute;n. Entonces,<br>
+b&aacute;sicamente, la CPU lee el IP, obtiene la pr&oacute;xima
+instrucci&oacute;n, la ejecuta,<br> incrementa el IP* y vuelve al primer paso.
 <br>
-The value of the instruction pointer itself can be set to some arbitrary <br>
-location in memory. You ever wonder what an infinite loop is on a computer?<br> It's what happens when an instruction pointer is set to instructions that <br>
-keep telling the instruction pointer to set itself to that same set of <br>
-instructions.<br>
 <br>
+Al IP se le puede poner cualquier valor arbitrario, que se interpretar&aacute;
+como<br> una posici&oacute;n en memoria. &iquest;Alguna vez te preguntaste
+qu&eacute; es un bucle infinito<br> en una computadora? Es lo que ocurre cuando
+se pone un valor del IP que<br> hace que ejecute un conjunto de instrucciones
+que vuelven a poner al IP a<br> referenciar a esas instrucciones.<br>
+<br>
+<br>
+*Nota: en este caso, IP se refiere al Instruction Pointer, y no a las<br>
+direcciones IP ni al Internet Protocol.
 <div class="center">
 <a href="code.html">
 	<img src="images/Left.png" alt="<left" style="width:50px;height:80px;" align="middle">
