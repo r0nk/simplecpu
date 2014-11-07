@@ -17,68 +17,73 @@ border:1px solid black;
 }
 </style>
 </head>
-
-Cool, now we have a basic calculator. How can we turn this up to eleven<br> 
-and make a computer?<br>
+Genial, ya tenemos una calculadora b&aacute;sica. &iquest;C&oacute;mo podemos
+evolucionar<br>esto para conseguir una computadora?<br>
 <br>
-Code.<br>
+C&oacute;digo.<br>
 <br>
-Now that you know what data is, code is easy to explain. It's just data.<br>
-The reason why it's different than other data, however, is because the CPU<br>
-interprets it as <i>instructions.</i><br>
+Ahora que sab&eacute;s c&oacute;mo est&aacute;n hechos los datos, explicar el
+c&oacute;digo es f&aacute;cil. Simplemente es un conjunto de datos. La
+raz&oacute;n por la que difiere del resto<br> de los datos es que la CPU lo
+interpreta como <i>instrucciones</i>.<br>
 <br>
-Let's say we wanted the computer to do math, we could use a system like;<br>
+Digamos que quer&iacute;amos que la computadora haga cuentas, entonces<br>
+podr&iacute;amos usar un sistema como:<br>
 <br>
 <table>
  <tr>
-  <td><b>instruction</b></td>
+  <td><b>instrucci&oacute;n</b></td>
   <td></td>
-  <td><b>code</b></td>
+  <td><b>c&oacute;digo</b></td>
  <tr>
-  <td><i>"add a number to another number"</i></td>
+  <td><i>"sumar un n&uacute;mero con otro"</i></td>
   <td>&nbsp;&nbsp;</td>
   <td>00000001</td>
  </tr>
  <tr>
-  <td><i>"subtract a number from another number"</i></td>
+  <td><i>"restar un n&uacute;mero a otro"</i></td>
   <td>&nbsp;&nbsp;</td>
   <td>00000010</td>
  </tr>
 </table>
 <br>
-With this, we can set what logic gates are being used based on data.<br>
+Con esto, podemos establecer qu&eacute; compuertas l&oacute;gicas se usan
+bas&aacute;ndose<br> en los datos.<br>
 <br>
-Now, real quick, memory is organized in a computer by something called<br>
-memory addresses, which basically allow the CPU to ask for memory at a<br>
-certain location. Generally speaking the addresses are sized by "bytes"<br>
-which is just another word for "eight bits". So if we wanted to access<br>
-memory location five or whatever we could store that as '00000101'.<br>
+Ahora, <i>muy</i> r&aacute;pidamente, la memoria se organiza en la computadora
+con<br> algo llamado "direcciones de memoria", que es b&aacute;sicamente una
+forma de<br> permitirle a la CPU que pida el valor de la memoria en una
+ubicaci&oacute;n<br> espec&iacute;fica. En general, las direcciones se asignan
+a cada "byte", que es<br>  simplemente otra forma de decir "ocho bits".
+As&iacute; que si quisi&eacute;ramos acceder<br> a la direcci&oacute;n de
+memoria cinco, podr&iacute;amos almacenarlo como '00000101'.<br>
 <br>
-Lets go back and add some more to our table:<br>
+Volvamos a nuestra tabla y agregemos algo m&aacute;s:<br>
 <br>
 <table>
  <tr>
-  <td><i>"move this data into some location"</i></td>
+  <td><i>"mover un dato a alguna ubicaci&oacute;n"</i></td>
   <td>&nbsp;&nbsp;</td>
   <td>00000011</td>
  <tr>
 </table>
 
 <br>
-Cool, now we can say something like:<br>
+Genial. Ahora podemos decir algo como:<br>
 <br>
-&nbsp;&nbsp;"add the number at location #5 in memory to the other number at <br>
-&nbsp;&nbsp;location #7 in memory."<br>
+&nbsp;&nbsp;"sumar el n&uacute;mero en la posici&oacute;n de memoria #5 con el
+n&uacute;mero de la<br>&nbsp;&nbsp;posici&oacute;n de memoria #7"<br>
 <br>
-By breaking it down into:<br>
+Parti&eacute;ndolo en:<br>
 <br>
-&nbsp;&nbsp;(add) (memory address #5) (memory address #7)<br>
+&nbsp;&nbsp;(sumar) (posici&oacute;n de memoria #5) (posici&oacute;n de memoria
+#7)<br>
 <br>
-Which is really just:<br>
+Que en realidad no es m&aacute;s que:<br>
 <br>
 &nbsp;&nbsp;00000001 00000101 00000111<br>
 <br>
-Pretty sweet right?<br>
+Hermoso, &iquest;no?<br>
 <br>
 <div class="center">
 <a href="adder.html">
