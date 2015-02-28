@@ -2,32 +2,53 @@ var c = document.getElementById("binaryInc");
 c.onselectstart = function(){return false;}
 var ctx = c.getContext("2d");
 ctx.textAlign="right";
-var n = 0;
+
+var number = 0;
+
 c.addEventListener('click',function(e){
 	e.preventDefault();
-	(n>254)?n=0:n+=1;
+	number++;
+	if(number>254)
+		number=0;
 	update();
 },false);
+
+function drawButton(){
+	//the big flashy "CLICK ME" button that doesn't actually do anything.
+	ctx.fillStyle = "#CCCCCC";
+	ctx.fillRect(8,4,140,20);
+	ctx.fillStyle = "#000000";
+	ctx.fillText("click me to add one",145,20);
+}
+
+function drawLabels(){
+	ctx.fillStyle = "#CCCCCC";
+	ctx.font = "16px Arial";
+	ctx.fillText("decimal",160,50);	
+	ctx.fillText("binary",19,90);	
+}
+
 function update(){
 	ctx.clearRect(0,0,1000,800);
 	ctx.font = "48px Arial";
 	ctx.fillStyle = "#000000";
-	ctx.fillText(""+n,245,50);	
-	numDraw(n);
+	ctx.fillText(""+number,245,50);
+	drawBinary(number);
 	ctx.fillStyle = "#CCCCCC";
 	ctx.font = "16px Arial";
-	sizesDraw();
+	//drawLabels();
+//	drawSizes();
+	drawButton();
 }
-function sizesDraw(){
+function drawSizes(){
 	ctx.fillRect(222,110,20,2);
 	ctx.fillText("bit",219,117);	
-	ctx.fillRect(145,130,98,2);
-	ctx.fillText("nibble",141,137);	
-	ctx.fillRect(31,150,212,2);
-	ctx.fillText("byte",30,157);	
+	ctx.fillRect(31,130,212,2);
+	ctx.fillText("byte",30,137);	
 }
-function numDraw(n){
+function drawBinary(n){
 	var space = 26;
+	//messy, but we use it to show colors.
 	(chardraw(n,128,245-(7*space+8),95))?n-=128:n=n;
 	(chardraw(n,64,245-(6*space+8),95))?n-=64:n=n;
 	(chardraw(n,32,245-(5*space+8),95))?n-=32:n=n;
@@ -36,7 +57,6 @@ function numDraw(n){
 	(chardraw(n,4,245-(2*space),95))?n-=4:n=n;
 	(chardraw(n,2,245-(1*space),95))?n-=2:n=n;
 	chardraw(n,1,245,95)
-	//messy, but we use it to show colors anyways, mine as well
 }
 function chardraw(n,a,x,y){
 	if((n-a)>=0){
