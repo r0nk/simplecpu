@@ -1,5 +1,7 @@
 var mouseDown = false;
 
+var year = 1955;
+var img = document.getElementById("nam");
 var c = document.getElementById("map");
 c.onselectstart = function(){return false;}
 var ctx = c.getContext("2d");
@@ -10,17 +12,9 @@ c.addEventListener('mousedown',function(e){
 	x=e.pageX-ctx.canvas.offsetLeft;
 	y=e.pageY-ctx.canvas.offsetTop;
 
-	//scroll bar
-	if((x>225&&x<235)&&(y>40&&y<280)){
-		mouseDown = true;
-		offset = y-40;
-		if(offset>248)
-			offset=248;
-		if(offset<0)
-			offset=1;
-	}
 	update();
 },false);
+
 c.addEventListener('mouseup',function(e){
 	mouseDown = false;
 },false);
@@ -28,14 +22,7 @@ c.addEventListener('mouseup',function(e){
 c.addEventListener('mousemove',function(e){
 	if(mouseDown){
 		y=e.pageY-ctx.canvas.offsetTop;
-		if(y>40&&y<300){
-			offset = y-40;
-			if(offset>248)
-				offset=248;
-			if(offset<0)
-				offset=1;
-			update();
-		}
+		update();
 	}
 },false);
 
@@ -49,11 +36,11 @@ c.addEventListener(mousewheelevt,function(e){
 
 	s = e.wheelDelta ? e.wheelDelta : -e.detail;
 	if(s>0){
-		if(offset>1)
-			offset--;
+		if(year<1975)
+			year++;
 	}else{
-		if(offset<248)
-			offset++;
+		if(year>1955)
+			year--;
 	}
 	update();
 	return false;
@@ -95,20 +82,30 @@ function drawCpu(c){
 }
 */
 function draw_map(){
-	ctx.fillStyle = "#DDDDDD";
-	ctx.fillRect(0,0,190,190);
+	croptop=102;
+	ctx.drawImage(nam,
+			0,croptop,689,891-croptop,
+			0,0,689,891-croptop);
+	ctx.fillStyle = "#FFFFFF";
+	ctx.fillRect(0,0,100,30);
 	ctx.strokeStyle = "#999999";
-	ctx.strokeRect(0,0,190,190);
-	ctx.font = "14px Arial";
+	ctx.strokeRect(0,0,100,30);
+	ctx.font = "16px Arial";
 	ctx.fillStyle = "#999999";
-	ctx.fillText("Instruction Pointer:",45,85);	
+	ctx.fillText("year:" + year.toString(),20,20);
+
+}
+
+function draw_battles()
+{
+	//TODO
 }
 
 function drawFrame(){
 	ctx.setTransform(1,0,0,1,0,0);	
 	ctx.clearRect(0,0,1000,1000);
-	//draws everything onto the canvas 
 	draw_map();
+	draw_battles();
 }
 
 update();
