@@ -7,49 +7,49 @@
 <div class="wrap">
 <ul>
  <li><a href="Binary.html"><b>SimpleCPU.com</b></a>&nbsp;&nbsp;</li>
- <li><a href="about.html">about</a></li>
+ <li><a href="about.html">acerca de</a></li>
 </ul><br>
 <div class="content">
-Here is a (relatively) simple CPU for you to play with;<br>
+Esta es una CPU relativamente simple con la que pod&eacute;s jugar:<br>
 </div>
 <canvas id="cpu" width="550" height="270"></canvas><br>
 <script src="scripts/cpu.js"></script>
 <div class="content">
-To modify memory, simply click on the bits while the cpu is off. You can<br>
-scroll through memory as well. To allow the cpu to start executing <br>
-instructions, turn the switch on.<br>
+Para modificar la memoria, clicke&aacute; los bits mientras la CPU est&aacute;
+apagada.<br> Pod&eacute;s scrollear por toda la memoria. Para que la CPU
+empiece a ejecutar<br> las instrucciones, prend&eacute; el interruptor.<br>
 <br>
-This cpu has three different instructions:<br>
+Esta CPU tiene tres instrucciones diferentes:<br>
 <table>
  <tr>
-  <td><b>Instruction</b></td>
+  <td><b>Instrucci&oacute;n</b></td>
   <td></td>
-  <td><b>Code</b></td>
+  <td><b>C&oacute;digo</b></td>
  <tr>
-  <td><i>add the value at the address held at (Instruction Pointer + 1)<br>
- to the value at the address held at (Instruction Pointer + 2)</i></td>
+  <td><i>suma el valor de la posici&oacute;n (IP + 1) con<br>el valor de la
+    posici&oacute;n (IP + 2)</i></td>
   <td>&nbsp;&nbsp;</td>
   <td>00000001</td>
  </tr>
  <tr>
-  <td><i>subtract the value at the address held at (Instruction Pointer + 2)<br>
- from the value at the address held at (Instruction Pointer + 1)</i></td>
+  <td><i>resta el valor de la posici&oacute;n (IP + 2) al<br> valor de la
+    posici&oacute;n (IP + 1)</i></td>
   <td>&nbsp;&nbsp;</td>
   <td>00000010</td>
  </tr>
  <tr>
-  <td><i>move the value at the address held at (Instruction Pointer + 1)<br>
- to the value at the address held at (Instruction Pointer + 2)</i></td>
+  <td><i>mueve el valor de la posici&oacute;n (IP + 1) a la<br> posici&oacute;n
+    refereida por la posici&oacute;n (IP + 2)</i></td>
   <td>&nbsp;&nbsp;</td>
   <td>00000011</td>
  </tr>
 </table>
 <br>
-All of the instructions have a size of 3 bytes (operands included).This <br>
-means that we increment the instruction pointer by 3 after each instruction <br>
-is executed.<br>
+Todas las instrucciones tienen un tama&ntilde;o de 3 bytes (incluyendo los<br>
+operandos). Esto significa que incrementamos el IP en 3 cada vez que<br>
+ejecutamos una instrucci&oacute;n.<br>
 <br>
-The instruction pointer can be accessed by addressing memory location 00000000.
+Se puede acceder al IP en la posici&oacute;n 00000000.
 <br>
 <br>
 <div class="center">
